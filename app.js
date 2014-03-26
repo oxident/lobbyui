@@ -18,6 +18,65 @@ window.serverTime = 0;
         };
     }]);
 
+    untap.directive('upload', function(){
+    	return {
+    		restrict: 'E',
+    		template: '<div><a class="button expand secondary small" ng-click="click()">'+
+    					'<i class="fi-upload"></i> {{upload}}'+
+    					'</a>'+
+    					'<div data-alert class="alert-box warning radius" ng-show="warning != \'\'">'+
+						'  {{warning}}'+
+						'</div>'+
+    					'<input style="display: none;" type="file"></div>',
+    		link: function(scope, elem, attrs) {
+				scope.upload = 'Upload';
+				scope.warning = '';
+    			scope.click = function() {
+    				inputF = elem.find('input[type="file"]');
+    				textA = elem.find('textarea');
+    				inputF.trigger('click').bind('change', function(e) {
+						var input = this;
+						
+						if (input.files && input.files[0]) {
+							scope.warning = '';
+				            var reader = new FileReader();
+				            reader.onload = function (e) {
+				                var b64 = e.target.result.split(',')[1];
+				                var byteSize = encodeURI(b64).split(/%..|./).length - 1;
+				                var filename = $(input).val().replace(/^.*[\\\/]/, '');
+				          		var ext = filename.split('.').pop();
+
+				          		if(typeof attrs.fileExtentions != 'undefined') {
+				          			if(jQuery.inArray( ext, attrs.fileExtentions.split(' ') )) {
+				          				scope.warning = 'File type invalid.';
+				          			}
+				          		}
+
+				          		if(typeof attrs.maxSize != 'undefined') {
+				          			if(byteSize > parseInt(attrs.maxSize)) {
+				          				scope.warning = 'File too large.';
+				          			}
+				          		}
+
+				          		var model = attrs.ctrlModel || uploadFile;
+				          		console.log(filename, ext, byteSize);
+				          		if(scope.warning == '') {
+					          		//textA.val(b64);
+					          		scope.$parent[model] = b64;
+					          		scope.upload = 'Upload : ' + filename;
+				          		}else{
+				          			scope.$parent[model] = '';
+					          		scope.upload = 'Upload';
+				          		}
+				            }
+				            reader.readAsDataURL(input.files[0]);
+				        }
+    				});
+    			}
+    		}
+    	}	
+    });
+
     untap.controller('lobbyCtrl', function($scope, lobbyFeed) {
     	$scope.g = lobbyFeed;
     	$scope.template = 'lobbyui/templates/lobby.html';
@@ -50,6 +109,7 @@ window.serverTime = 0;
     	$scope.g = lobbyFeed;
 
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
+    	$scope.userData.seldeckBack = $scope.userData.deckBack.split('.')[0];
 
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
@@ -57,11 +117,14 @@ window.serverTime = 0;
 
 		$scope.saveProfile = function() {
 			$scope.userData.action = 'logback';
+			$scope.userData.avatarUpload = $scope.avatarUpload;
 			$http.post('apiv2.php',  $scope.userData, {responseType:'json'}).
 			success(function(r, status) {
 
 			});
 		}
+
+		window.pjh = $scope;
     }
 
     // userBar controller will control all lobbyFeed data for all other controllers
@@ -99,29 +162,16 @@ window.serverTime = 0;
 	        		}
 	        	}
 
-	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) {
-	        		obj.userData = r.userData;
-	        		console.log('changed')
-	        	}
-	        	if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) {
-	        		obj.gameList = r.gameList;
-	        	}
-	        	if(JSON.stringify(obj.specList) != JSON.stringify(r.specList)) {
-	        		obj.specList = r.specList;
-	        	}
+	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) { obj.userData = r.userData; }
+	        	if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) { obj.gameList = r.gameList; }
+	        	if(JSON.stringify(obj.specList) != JSON.stringify(r.specList)) { obj.specList = r.specList; }
 	        	
 	        	
 	        	
 	        	if(typeof r.online != 'undefined') { // catch blanks from odd count
-		        	if(JSON.stringify(obj.friends) != JSON.stringify(r.friends)) {
-		        		obj.friends = r.friends;
-		        	}
-		        	if(JSON.stringify(obj.blocks) != JSON.stringify(r.blocks)) {
-		        		obj.blocks = r.blocks;
-		        	}
-		        	if(JSON.stringify(obj.online) != JSON.stringify(r.online)) {
-		        		obj.online = r.online;
-		        	}
+		        	if(JSON.stringify(obj.friends) != JSON.stringify(r.friends)) { obj.friends = r.friends; }
+		        	if(JSON.stringify(obj.blocks) != JSON.stringify(r.blocks)) { obj.blocks = r.blocks; }
+		        	if(JSON.stringify(obj.online) != JSON.stringify(r.online)) { obj.online = r.online; }
 		        }
 		        if(typeof r.user != 'undefined') {
 		        	obj.user = r.user;
