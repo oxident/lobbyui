@@ -4,7 +4,7 @@
 	</div>
 	<div class="small-6 columns">
 	  	<a href="#" class="button expand success" ng-click="changeTemplate('gamesList')">Games 
-	  		<i ng-if="gameCount > 0" style="color: black;">{{gameCount}}</i>
+	  		<i ng-if="g.gameList.length > 0" style="color: black;">{{g.gameList.length}}</i>
 	 	</a>
 	</div>
 </div>
@@ -42,7 +42,7 @@
 
 		    <aside class="right-off-canvas-menu">
 		      <ul class="off-canvas-list">
-		        <li><label>Users Online <span class="right">{{online.length}} </span></label></li>
+		        <li><label>Users Online <span class="right">{{g.online.length}} </span></label></li>
 		        <li ng-repeat="user in g.online | orderBy:'username'">
 		        	<a href="#" class="upperCase" data-dropdown="{{user.username}}_dropDown">{{user.username}} 
 			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
