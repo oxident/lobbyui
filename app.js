@@ -1,4 +1,5 @@
 window.serverTime = 0;
+window.apiURL = 'http://www.untap.in/apiv2.php';
 
 	var untap = angular.module('untap', ['mm.foundation'])
 	.filter('to_trusted', ['$sce', function($sce){
@@ -79,7 +80,7 @@ window.serverTime = 0;
 
     untap.controller('lobbyCtrl', function($scope, lobbyFeed) {
     	$scope.g = lobbyFeed;
-    	$scope.template = 'lobbyui/templates/lobby.html';
+    	$scope.template = 'templates/lobby.html';
 
     	$scope.onloadTemp = function() {
     		if($('#chatFeed').length > 0) {
@@ -98,7 +99,7 @@ window.serverTime = 0;
 
     	$scope.changeTemplate = function(template) {
     		if($scope.template != template) {
-    			$scope.template = 'lobbyui/templates/'+template+'.html';
+    			$scope.template = 'templates/'+template+'.html';
     		}
     	}
     });
@@ -128,7 +129,7 @@ window.serverTime = 0;
 				password: $scope.userData.password,
 				avatar: $scope.avatarUpload
 			}
-			$http.post('apiv2.php',  postData, { responseType:'json' }).
+			$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
 			success(function(r, status) {
 				$scope.showAlert = { type: r.status, message: r.message };
 				if(postData.avatar != '') {
@@ -155,14 +156,14 @@ window.serverTime = 0;
 
 		$scope.openModal = function() {
 			var modalInstance = $modal.open({
-				templateUrl: '/lobbyui/templates/accountModal.html',
+				templateUrl: 'templates/accountModal.html',
 				controller: modalInstanceCtrl
 			});
 		}
 
     	$scope.fetch = function(obj, count) {
         	var q = $q.defer()
-        	$http.post('apiv2.php',  { action: 'lobbyFeed', count: count }, {responseType:'json'})
+        	$http.post(apiURL,  { action: 'lobbyFeed', count: count }, { responseType:'json', withCredentials: true })
 			.success(function(r, status) {
 				var k = 0;
 
