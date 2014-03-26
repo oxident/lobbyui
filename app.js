@@ -104,8 +104,24 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	}
     });
 
-    untap.controller('loggedout', function($scope, lobbyFeed) {
+    untap.controller('loggedout', function($scope, $http, $rootScope, lobbyFeed) {
     	$scope.g = lobbyFeed;
+
+    	$scope.login = function() {
+    		var postData = { action: 'login', username: $scope.g.user, password: $scope.password }
+    		$scope.showAlert = false;
+    		$http.post(apiURL,  postData, {responseType:'json'}).
+        	success(function(r, status) {
+            	if(r.status == 'success') {
+            		$scope.showAlert = { type: r.status, message: r.message };
+            		$rootScope.$broadcast('loginSuccess');
+            	}else{
+            		$scope.showAlert = { type: r.status, message: r.message };
+            	}
+            	$scope.password = '';
+        	});
+    	}
+    	
     });
 
 
@@ -146,9 +162,9 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.g = lobbyFeed;
 
     	$scope.logout = function() {
-			$http.post('apiv2.php',  { action: 'logout' }, {responseType:'json'}).
+			$http.post(apiURL,  { action: 'logout' }, {responseType:'json'}).
         	success(function(r, status) {
-            	if(r.status == 'OK') {
+            	if(r.status == 'success') {
             		console.log('User Logged Out');
             	}
         	});
@@ -222,6 +238,8 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 	        }, loopTime);
         }
         loop(0);
+
+        $scope.$on('loginSuccess', function(event) { loop(0); });
 
         window.pjh = $scope.g;
     });

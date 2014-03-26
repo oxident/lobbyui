@@ -134,19 +134,22 @@
 		<div class="medium-6 columns">
 			<div class="panel">
 			<h4>Login<h4>
-			<form>
+			<form ng-submit="login()">
 				<label>Username
-			    	<input type="text" placeholder="Your Username" ng-model="g.user">
+			    	<input type="text" placeholder="Your Username" required ng-model="g.user">
 			    </label>
 			    <label>Password
-			    	<input type="Password" placeholder="Enter your Password">
+			    	<input type="Password" placeholder="Enter your Password" required ng-model="password">
 			    </label>
+			    <alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
 			    <button type="submit" class="expand">Login</button>
 			</form>
 			</div>
 		</div>
 		<div class="medium-6 columns">
-			<div class="panel">Register</div>
+			<div class="panel">
+				<h4>Register</h4>
+			</div>
 		</div>
 	</div>
 	</div>
