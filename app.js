@@ -83,7 +83,12 @@ window.serverTime = 0;
 
     	$scope.onloadTemp = function() {
     		if($('#chatFeed').length > 0) {
-    			$('#chatFeed').height($(window).height()-($('#menuTopBar').outerHeight()+$('#menuButtons').outerHeight()+$('#menuLobbyBar').outerHeight()+$('#chatter').outerHeight()+20));
+    			//fix caht height window height with no scroll
+    			$('#chatFeed').height($(window).height()-($('#menuTopBar')
+    				.outerHeight()+$('#menuButtons')
+    				.outerHeight()+$('#menuLobbyBar')
+    				.outerHeight()+$('#chatter')
+    				.outerHeight()+20));
     			baselineChat();
     			setTimeout(function(){
     				$(document).foundation();
@@ -109,18 +114,26 @@ window.serverTime = 0;
     	$scope.g = lobbyFeed;
 
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
-    	$scope.userData.seldeckBack = $scope.userData.deckBack.split('.')[0];
 
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
 
 		$scope.saveProfile = function() {
-			$scope.userData.action = 'logback';
-			$scope.userData.avatarUpload = $scope.avatarUpload;
-			$http.post('apiv2.php',  $scope.userData, {responseType:'json'}).
+			$scope.showAlert = false;
+			var postData = {
+				action: 'updateUserData',
+				email: $scope.userData.email,
+				deckBack: $scope.userData.deckBack,
+				password: $scope.userData.password,
+				avatar: $scope.avatarUpload
+			}
+			$http.post('apiv2.php',  postData, { responseType:'json' }).
 			success(function(r, status) {
-
+				$scope.showAlert = { type: r.status, message: r.message };
+				if(postData.avatar != '') {
+					$scope.userData.avatar = $scope.userData.avatar + '?' + new Date().getTime();
+				}
 			});
 		}
 
@@ -227,6 +240,14 @@ window.serverTime = 0;
             user: {}
         }
     });
+
+    function makeid() {
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    for( var i=0; i < 10; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    return text;
+	}
 
     function baselineChat() {
     	if($('#chatFeed').length < 1) return false;

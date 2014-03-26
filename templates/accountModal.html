@@ -1,5 +1,6 @@
 <h2>Profile Settings: <span class="upperCase">{{userData.username}}</span></h2>
 <br>
+<alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
 <form ng-submit="saveProfile()">
   <div class="row">
     <div class="large-4 columns" style="text-align: center;">
@@ -7,16 +8,16 @@
 			<img ng-src="/img/avatars/{{userData.avatar}}" style="height: 150px;">
 		</a>
 	    <a class="th radius" href="#">
-			<img ng-src="/backs/{{userData.deckBack}}" style="height: 150px;">
+			<img ng-src="/backs/{{userData.deckBack}}.jpg" style="height: 150px;">
 		</a>
     </div>
     
     <div class="large-4 columns">
       <label>Avatar
-        <upload max-size="150000" file-extentions="jpg png" ctrl-model="avatarUpload"></upload>
+        <upload max-size="150000" file-extentions="jpg" ctrl-model="avatarUpload"></upload>
       </label>
       <label>Deck Back
-        <select ng-model="userData.seldeckBack" ng-options="deck for deck in userData.unlockedDecks"></select>
+        <select ng-model="userData.deckBack" ng-options="deck for deck in userData.unlockedDecks"></select>
       </label>
     </div>
     <div class="large-4 columns">
