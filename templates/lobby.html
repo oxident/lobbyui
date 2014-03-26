@@ -1,0 +1,80 @@
+<div class="row" id="menuButtons">
+	<div class="small-6 columns">
+	  	<a class="button expand disabled">Lobby</a>
+	</div>
+	<div class="small-6 columns">
+	  	<a href="#" class="button expand success" ng-click="changeTemplate('gamesList')">Games 
+	  		<i ng-if="gameCount > 0" style="color: black;">{{gameCount}}</i>
+	 	</a>
+	</div>
+</div>
+
+<div class="row" id="lobbyChat">
+	<div class="small-12 columns">
+		<div class="off-canvas-wrap">
+		  <div class="inner-wrap">
+		    <nav class="tab-bar" id="menuLobbyBar">
+		      <section class="left-small">
+		        <a class="left-off-canvas-toggle fill-link" ><i class="fi-torsos-male-female" style="font-size: 22px; margin: 14px;"></i></a>
+		      </section>
+
+		      <section class="middle tab-bar-section">
+		        <h1 class="title">Lobby Chat</h1>
+		      </section>
+
+		      <section class="right-small">
+		        <a class="right-off-canvas-toggle fill-link" ><i class="fi-list" style="font-size: 22px; margin: 14px;"></i></a>
+		      </section>
+		    </nav>
+
+		    <aside class="left-off-canvas-menu">
+		      <ul class="off-canvas-list">
+		        <li><label>Friends</label></li>
+		        <li ng-repeat="user in g.friends | orderBy:'username'">
+		        	<a href="#" class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
+		        </li>
+		        <li><label>Blocked</label></li>
+		        <li ng-repeat="user in g.blocks | orderBy:'username'">
+		        	<a href="#" class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
+		        </li>
+		      </ul>
+		    </aside>
+
+		    <aside class="right-off-canvas-menu">
+		      <ul class="off-canvas-list">
+		        <li><label>Users Online <span class="right">{{online.length}} </span></label></li>
+		        <li ng-repeat="user in g.online | orderBy:'username'">
+		        	<a href="#" class="upperCase" data-dropdown="{{user.username}}_dropDown">{{user.username}} 
+			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
+			        	<i class="fi-dollar right" ng-if="user.gc == 'true'"></i>
+		        	</a>
+					<ul id="{{user.username}}_dropDown" class="f-dropdown" data-dropdown-content>
+						<li><a href="#"><i class="fi-comment-quotes" style="margin-right:5px;"></i> Private Message</a></li>
+						<li><a href="#"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Add Friend</a></li>
+						<li><a href="#"><i class="fi-prohibited" style="margin-right:5px;"></i> Block User</a></li>
+					</ul>
+		        </li> 
+		      </ul>
+		    </aside>
+
+		    <section class="main-section" style="padding: 0 15px;">
+				<div class="row" id="chatFeed">
+					<div class="small-12 columns" ng-repeat="chat in g.chat">
+						<b class="upperCase {{chat.usertype}}">{{chat.username}}</b> : 
+						<span ng-bind-html="chat.message | to_trusted"></span> 
+						<i class="show-for-medium-up">{{chat.gtime | agotime}} </i></div>
+				</div>
+				<div class="row">
+					<div class="small-12">
+						<input type="text" id="chatter"/>
+					</div>
+				</div>	
+
+		    </section>
+
+		  <a class="exit-off-canvas"></a>
+
+		  </div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,37 @@
+<div class="row" id="menuButtons">
+	<div class="small-6 columns">
+	  	<a class="button expand" ng-click="changeTemplate('lobby')">Lobby</a>
+	</div>
+	<div class="small-6 columns">
+	  	<a href="#" class="button expand success disabled">Games 
+	  		<i ng-if="gameCount > 0" style="color: black;">{{gameCount}}</i>
+	 	</a>
+	</div>
+</div>
+
+<div id="gamesList">
+	<div class="row" ng-repeat="game in g.gameList">
+		<div class="medium-6 small-8 columns">
+			<h4>{{game.gameName}} <small>{{game.username}}</small></h4>
+		</div>
+		<div class="medium-2 small-4 columns">
+			<a href="#" class="button expand secondary disabled small">{{game.gameType}}</a>
+		</div>
+		<div class="medium-4 show-for-medium-up columns">
+		  	<a href="#" class="button expand success small" ng-if="game.locked == 'false'">Join</a>
+		  	<a href="#" class="button expand alert small" ng-if="game.locked == 'true'">Join <i class="fi-lock"></i></a>
+		</div>
+	</div>
+
+	<div class="row" ng-repeat="game in g.specList">
+		<div class="medium-6 small-8 columns">
+			<h4>{{game.gameName}} <small>{{game.user1}} vs {{game.user2}}</small></h4>
+		</div>
+		<div class="medium-2 small-4 columns">
+			<a href="#" class="button expand secondary disabled small">{{game.gameType}}</a>
+		</div>
+		<div class="medium-4 show-for-medium-up columns">
+		  	<a href="#" class="button expand small">Spectate</a>
+		</div>
+	</div>
+</div>

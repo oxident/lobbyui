@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="untap">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="shortcut icon" sizes="196x196" href="img/app/196.png">
+	<link rel="shortcut icon" sizes="128x128" href="img/app/128.png">
+	<link rel="apple-touch-icon" href="img/app/120.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="img/app/76.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/app/120.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="img/app/152.png">
+	<link rel="apple-touch-startup-image" href="img/app/startup.png">
+	<meta name="author" content="Patrik Hartwig">
+	<link rel="shortcut icon" href="img/app/32.ico">
+	<title>UnTap.in :: Beta</title>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.1.1/css/foundation.min.css">
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.1.1/js/foundation.min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+	<style type="text/css">
+
+	html,body {
+		background-image: url('http://www.untap.in/img/1.gif');
+	}
+
+	#chatFeed { overflow: scroll; background-color: rgba(0,0,0,0.5); color: #cccccc; }
+	#chatFeed>div:nth-child(odd) { background: rgba(255, 255, 255, 0.03); }
+	#chatFeed>div>b { color: #2ba6cb; }
+	#chatFeed>div>b.mod { color: #ee5f5b; }
+	#chatFeed>div>b.gold { color: gold; }
+	#chatFeed>div>i { font-size:10px; }
+	#chatFeed>div { padding-top: 3px; padding-bottom: 3px; }
+ 	#chatter { margin-bottom: 0px; }
+	#gamesList>div:hover { background: rgba(255, 255, 255, 0.1); }
+	#gamesList>div .button { margin: 0px; }
+	#gamesList>div { margin-bottom: 3px; }
+	
+	ul.f-dropdown { background-color: #444444; }
+	ul.f-dropdown>li:hover { background-color: #5e5e5e; }
+
+	h4>small { color: white; }
+	.fill-link {
+		width: 100%;
+		height: 100%;
+		display: inline-block;
+	}
+
+	.upperCase {
+		text-transform: capitalize;
+	}
+
+	.row {
+		max-width: 92rem;
+	}
+	</style>
+</head>
+<body>
+<!-- fixed navigation -->
+ <div class="fixed">
+  <nav class="top-bar" data-topbar id="menuTopBar" ng-controller="userBar">
+    <ul class="title-area">
+      <!-- Title Area -->
+      <li class="name">
+        <h1>
+          <a href="#">
+            UnTap.in :: Beta
+          </a>
+        </h1>
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+    </ul>
+ 
+    <section class="top-bar-section">
+      <ul class="right">
+        <li class="divider"></li>
+        <li class="has-dropdown">
+          <a href="#" class="uppercase">UnTap</a>
+          <ul class="dropdown">
+            <li><a href="#" ng-if="g.userData.username != 'null'" data-reveal-id="fundModal" data-reveal>Funding</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#" ng-if="g.userData.username != 'null'">Bug Tracker</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Admin</a></li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+        <li class="has-dropdown" ng-if="g.userData.username != 'null'">
+          <a href="#">Decks</a>
+          <ul class="dropdown">
+            <li><label>My Decks <span class="right">{{deckCount}}/{{g.userData.deckCount}}</span></label></li>
+            <li ng-repeat="deck in decks | orderBy:'type'"><a ng-click="deckModal(deck.pdb_rowid)">{{deck.type}}: {{deck.name}} <i>({{deck.cardCount}})</i></a></li>
+            <li class="divider"></li>
+            <li><label>Create</label></li>
+            <li class="has-dropdown">
+              <a href="#" class="">New Deck</a>
+              <ul class="dropdown">
+                <li><a href="#">MTG</a></li>
+                <li><a href="#">L5R</a></li>
+                <li><a href="#">TSP</a></li>
+                <li><a href="#">S2E</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+        <li class="has-dropdown" ng-if="g.userData.username != 'null'">
+          <a href="#" class="upperCase">{{g.userData.username}}</a>
+          <ul class="dropdown">
+            <li><a href="/lobbyui/templates/accountModal.html" data-reveal-id="accountModal" data-reveal-ajax="true">Profile</a></li>
+            <li><a href="#">Game History</a></li>
+            <li class="divider"></li>
+            <li><a ng-click="logout()">Log Out</a></li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+      </ul>
+    </section>
+  </nav>
+  </div>
+
+	<div ng-controller="lobbyCtrl">
+		<div ng-include="template" onload="onloadTemp()" ng-hide="g.userData.username == 'null'"></div>
+	</div>
+
+	<div ng-controller="loggedout" ng-show="g.userData.username == 'null'">
+	<div class="row" style="margin-top: 10px; max-width: 62.5rem" >
+		<div class="medium-6 columns">
+			<div class="panel">
+			<h4>Login<h4>
+			<form>
+				<label>Username
+			    	<input type="text" placeholder="Your Username" ng-model="g.user">
+			    </label>
+			    <label>Password
+			    	<input type="Password" placeholder="Enter your Password">
+			    </label>
+			    <button type="submit" class="expand">Login</button>
+			</form>
+			</div>
+		</div>
+		<div class="medium-6 columns">
+			<div class="panel">Register</div>
+		</div>
+	</div>
+	</div>
+
+	<div ng-controller="modalCtrl">
+		<div ng-include="template"></div>
+	</div>
+</body>
+<script type="text/javascript">
+
+	window.serverTime = 0;
+
+	var untap = angular.module('untap', ['ngRoute'])
+	.filter('to_trusted', ['$sce', function($sce){
+        return function(text) {
+			return $sce.trustAsHtml(text);
+        };
+    }]).filter('agotime', ['$sce', function($sce){
+        return function(time) {
+        	var seconds = serverTime-parseInt(time);
+        	var interval;
+		    interval = Math.floor(seconds / 3600);
+		    if (interval > 1) { return interval + " hours ago"; }
+		    if (interval >= 1) { return interval + " hour ago"; }
+		    interval = Math.floor(seconds / 60);
+		    if (interval >= 1) { return interval + " minutes ago"; }
+		    return Math.floor(seconds) + " seconds ago";
+        };
+    }]);
+
+    untap.controller('lobbyCtrl', function($scope, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+    	$scope.template = 'lobbyui/templates/lobby.html';
+
+    	$scope.onloadTemp = function() {
+    		if($('#chatFeed').length > 0) {
+    			$('#chatFeed').height($(window).height()-($('#menuTopBar').outerHeight()+$('#menuButtons').outerHeight()+$('#menuLobbyBar').outerHeight()+$('#chatter').outerHeight()+20));
+    			baselineChat();
+    			setTimeout(function(){
+    				$(document).foundation();
+    			}, 750);
+    		}
+    	}
+
+    	$scope.changeTemplate = function(template) {
+    		if($scope.template != template) {
+    			$scope.template = 'lobbyui/templates/'+template+'.html';
+    		}
+    	}
+    });
+
+    untap.controller('loggedout', function($scope, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+    });
+
+
+    //controllers for modals
+    untap.controller('modalCtrl', function($scope, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+    });
+
+
+    // userBar controller will control all lobbyFeed data for all other controllers
+    untap.controller('userBar', function($scope, $q, $http, $timeout, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+
+    	$scope.logout = function() {
+			$http.post('apiv2.php',  { action: 'logout' }, {responseType:'json'}).
+        	success(function(r, status) {
+            	if(r.status == 'OK') {
+            		console.log('User Logged Out');
+            	}
+        	});
+		}
+
+    	$scope.fetch = function(obj, count) {
+        	var q = $q.defer()
+        	$http.post('apiv2.php',  { action: 'lobbyFeed', count: count }, {responseType:'json'})
+			.success(function(r, status) {
+				var k = 0;
+
+				for(i in r.chat) {
+	        		if(typeof obj.chat[i] == 'undefined') {
+	        			obj.chat[i] = r.chat[i];
+	        			baselineChat();
+	        		}else{
+	        			obj.chat[i].gtime = r.chat[i].gtime;
+	        		}
+	        	}
+
+	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) {
+	        		obj.userData = r.userData;
+	        		console.log('changed')
+	        	}
+	        	if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) {
+	        		obj.gameList = r.gameList;
+	        	}
+	        	if(JSON.stringify(obj.specList) != JSON.stringify(r.specList)) {
+	        		obj.specList = r.specList;
+	        	}
+	        	
+	        	
+	        	
+	        	if(typeof r.online != 'undefined') { // catch blanks from odd count
+		        	if(JSON.stringify(obj.friends) != JSON.stringify(r.friends)) {
+		        		obj.friends = r.friends;
+		        	}
+		        	if(JSON.stringify(obj.blocks) != JSON.stringify(r.blocks)) {
+		        		obj.blocks = r.blocks;
+		        	}
+		        	if(JSON.stringify(obj.online) != JSON.stringify(r.online)) {
+		        		obj.online = r.online;
+		        	}
+		        }
+		        if(typeof r.user != 'undefined') {
+		        	obj.user = r.user;
+		        }
+
+	        	window.serverTime = parseInt(r.serverTime);
+
+	        	if(obj.userData.username == 'null') {
+	        		var loggedin = false;
+	        	}else{
+	        		var loggedin = true;
+	        	}
+	        	q.resolve(loggedin);
+				
+			}).error(function(){
+				console.log('failed')
+			});
+
+        	return q.promise;
+        }
+
+    	var loop = function (loopCount) {
+        	if(loopCount == 0) { var loopTime = 1; }else{ var loopTime = 3000; }
+        	$timeout(function(){
+	        	$scope.promise = $scope.fetch($scope.g, loopCount);
+		        loopCount++;
+		        $scope.promise.then(
+		        	function(v) {
+		        		if(v) {
+		        			loop(loopCount);
+		        		}
+		        	}
+		        );
+	        }, loopTime);
+        }
+        loop(0);
+
+        window.pjh = $scope.g;
+    });
+
+    //factory for lobbyFeed this will set up the object template ready for resource sharing.
+    untap.factory('lobbyFeed', function() {
+    	return {
+            chat: {},
+            blocks: {},
+            friends: {},
+            online: {},
+            specList: {},
+            userData: {
+            	username: 'null' //set default as null for no login.
+            },
+            gameList: {},
+            user: {}
+        }
+    });
+
+    function baselineChat() {
+    	if($('#chatFeed').length < 1) return false;
+    	clearTimeout(window.scrollDowner);
+		window.scrollDowner = setTimeout(function() {
+			$('#chatFeed').scrollTop($('#chatFeed')[0].scrollHeight);
+		}, 100);
+    }
+
+
+	$(document).foundation();
+	// $(function(){
+	// 	$('#chatFeed').height($(window).height()-($('#menuTopBar').outerHeight()+$('#menuButtons').outerHeight()+$('#menuLobbyBar').outerHeight()+$('#chatter').outerHeight()+20));
+	// });
+    var doc = document.documentElement;
+    doc.setAttribute('data-useragent', navigator.userAgent);
+</script>
+</html>
