@@ -1,51 +1,50 @@
-<div id="deckModal" class="reveal-modal large" data-reveal ng-controller="deckModal">
-	<h2>{{deck.type}}: <span class="upperCase">{{deck.name}}</span></h2>
-	<form ng-submit="">
-	  <div class="row">
-	    <div class="large-4 columns">
-			<label>Deck Title
-				<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
-			</label>
-			<a href="#" class="button expand secondary">Upload Deck File</a>
-			<a href="#" class="button expand secondary">Fetch Deck URL</a>
-	    </div>
-	    
-	    <div class="large-4 columns">
-		    <label>Deck 
-		    <span ng-if="deck.type == 'L5R'">(Fate)</span>
-		    <span ng-if="deck.type == 'ST2'">(Draw)</span>
-				<textarea placeholder="Deck Cards, list format" style="height: 450px;" ng-model="deck.textdeck.main"></textarea>
-			</label>
-	    </div>
-	    <div class="large-4 columns">
-	    	<label ng-if="deck.type == 'L5R' || deck.type == 'ST2'">Deck 2
-		    <span ng-if="deck.type == 'L5R'">(Dynasty)</span>
-		    <span ng-if="deck.type == 'ST2'">(Dilemma)</span>
-				<textarea placeholder="Deck 2 Cards, list format" style="height: 300px;" ng-model="deck.textdeck.main2"></textarea>
-			</label>
+<h2>{{deck.type}}: <span class="upperCase">{{deck.name}}</span></h2>
+<form ng-submit="">
+  <div class="row">
+    <div class="large-4 columns">
+		<label>Deck Title
+			<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
+		</label>
+		<a href="#" class="button expand secondary">Upload Deck File</a>
+		<a href="#" class="button expand secondary">Fetch Deck URL</a>
+    </div>
+    
+    <div class="large-4 columns">
+	    <label>Deck 
+	    <span ng-if="deck.type == 'L5R'">(Fate)</span>
+	    <span ng-if="deck.type == 'ST2'">(Draw)</span>
+			<textarea placeholder="Deck Cards, list format" style="height: 450px;" ng-model="deck.textdeck.main"></textarea>
+		</label>
+    </div>
+    <div class="large-4 columns">
+    	<label ng-if="deck.type == 'L5R' || deck.type == 'ST2'">Deck 2
+	    <span ng-if="deck.type == 'L5R'">(Dynasty)</span>
+	    <span ng-if="deck.type == 'ST2'">(Dilemma)</span>
+			<textarea placeholder="Deck 2 Cards, list format" style="height: 300px;" ng-model="deck.textdeck.main2"></textarea>
+		</label>
 
-	    	<label ng-if="deck.type == 'MTG'">Sideboard
-				<textarea placeholder="Sideboard Cards, list format" style="height: 125px;"></textarea>
-			</label>
+    	<label ng-if="deck.type == 'MTG'">Sideboard
+			<textarea placeholder="Sideboard Cards, list format" style="height: 125px;"></textarea>
+		</label>
 
-			<label ng-if="deck.type == 'MTG'">Alt Cards
-				<textarea placeholder="Alt Cards, list format" style="height: 125px;"></textarea>
-			</label>
+		<label ng-if="deck.type == 'MTG'">Alt Cards
+			<textarea placeholder="Alt Cards, list format" style="height: 125px;"></textarea>
+		</label>
 
-			<label ng-if="deck.type == 'MTG' || deck.type == 'L5R' || deck.type == 'ST2'">Starts in Play
-				<textarea placeholder="Starts in Play Cards, list format" style="height: 125px;"></textarea>
-			</label>
+		<label ng-if="deck.type == 'MTG' || deck.type == 'L5R' || deck.type == 'ST2'">Starts in Play
+			<textarea placeholder="Starts in Play Cards, list format" style="height: 125px;"></textarea>
+		</label>
 
-			<label ng-if="deck.type == 'TSP'">Starts in Hand
-				<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;"></textarea>
-			</label>
+		<label ng-if="deck.type == 'TSP'">Starts in Hand
+			<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;"></textarea>
+		</label>
 
-	    </div>
-	  </div>
-	  <div class="row">
-	    <div class="large-12 columns">
-	      <button type="submit" class="right">Save Deck</button>
-	    </div>
-	  </div>
-	</form>
-</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <button type="submit" class="right">Save Deck</button>
+    </div>
+  </div>
+</form>
+<a class="close-reveal-modal" ng-click="cancel()">&#215;</a>

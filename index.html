@@ -95,13 +95,13 @@
           <a href="#">Decks</a>
           <ul class="dropdown">
             <li><label>My Decks <span class="right">{{deckCount}}/{{g.userData.deckCount}}</span></label></li>
-            <li ng-repeat="deck in decks | orderBy:'type'"><a ng-click="deckModal(deck.pdb_rowid)">{{deck.type}}: {{deck.name}} <i>({{deck.cardCount}})</i></a></li>
+            <li ng-repeat="deck in decks.list | orderBy:'type'"><a ng-click="deckModal(deck.deckId)">{{deck.type}}: {{deck.name}} <i>({{deck.cardCount}})</i></a></li>
             <li class="divider"></li>
             <li><label>Create</label></li>
             <li class="has-dropdown">
               <a href="#" class="">New Deck</a>
               <ul class="dropdown">
-                <li><a href="#">MTG</a></li>
+                <li><a ng-click="deckModal('new')">MTG</a></li>
                 <li><a href="#">L5R</a></li>
                 <li><a href="#">TSP</a></li>
                 <li><a href="#">S2E</a></li>

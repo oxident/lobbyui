@@ -106,6 +106,8 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     				$(document).foundation();
     			}, 750);
     		}
+    		//trigger to load deckData
+    		$rootScope.$broadcast('reloadDecks');
     	}
 
     	$scope.changeTemplate = function(template) {
@@ -121,7 +123,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.login = function() {
     		var postData = { action: 'login', username: $scope.g.user, password: $scope.password }
     		$scope.showAlert = false;
-    		$http.post(apiURL,  postData, {responseType:'json'}).
+    		$http.post(apiURL,  postData, {responseType:'json', withCredentials: true }).
         	success(function(r, status) {
             	if(r.status == 'success') {
             		$scope.showAlert = { type: r.status, message: r.message };
@@ -140,7 +142,6 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     var modalInstanceCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
-    	console.log('dddd');
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
 
     	$scope.cancel = function () {
@@ -168,12 +169,22 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		window.pjh = $scope;
     }
 
+    var deckModalCtrl = function($scope, $modalInstance, $http, deckData, deckId) {
+    	console.log(deckId);
+    	$scope.deck = jQuery.extend({}, deckData.list[deckId] );
+
+    	$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+    }
+
     // userBar controller will control all lobbyFeed data for all other controllers
-    untap.controller('userBar', function($scope, $q, $http, $timeout, $modal, lobbyFeed) {
+    untap.controller('userBar', function($scope, $q, $http, $timeout, $modal, lobbyFeed, deckData) {
     	$scope.g = lobbyFeed;
+    	$scope.decks = deckData;
 
     	$scope.logout = function() {
-			$http.post(apiURL,  { action: 'logout' }, {responseType:'json'}).
+			$http.post(apiURL,  { action: 'logout' }, {responseType:'json', withCredentials: true }).
         	success(function(r, status) {
             	if(r.status == 'success') {
             		console.log('User Logged Out');
@@ -188,6 +199,19 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			});
 		}
 
+		$scope.deckModal = function(deckId) {
+			console.log(deckId);
+			var modalInstance = $modal.open({
+				templateUrl: 'templates/deckModal.html',
+				controller: deckModalCtrl,
+				resolve: {
+					deckId: function () {
+			        	return deckId;
+			        }
+				}
+			});
+		}
+
 		$scope.$on('sendChat', function(event, message) {
 			$scope.g.chat['deleteme'] = {
 				type: 'chat',
@@ -199,6 +223,14 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			}
 			baselineChat();
 		});
+
+		$scope.getDecks = function() {
+			$http.post(apiURL,  { action: 'deckData' }, { responseType:'json', withCredentials: true })
+			.success(function(r, status) {
+				$scope.decks.list = r;
+				$scope.deckCount = Object.keys(r).length;
+			})
+		}
 
     	$scope.fetch = function(obj, count) {
         	var q = $q.defer()
@@ -264,8 +296,9 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         loop(0);
 
         $scope.$on('loginSuccess', function(event) { loop(0); });
-
-        window.pjh = $scope.g;
+        $scope.$on('reloadDecks', function(event) { $scope.getDecks() });
+        window.userData = $scope.g;
+        window.deckData = $scope.decks;
     });
 
     //factory for lobbyFeed this will set up the object template ready for resource sharing.
@@ -282,6 +315,12 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
             gameList: {},
             user: {}
         }
+    });
+
+    untap.factory('deckData', function() {
+    	return {
+    		list: {}
+    	}
     });
 
     function makeid() {
