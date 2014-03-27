@@ -78,9 +78,20 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	}	
     });
 
-    untap.controller('lobbyCtrl', function($scope, lobbyFeed) {
+    untap.controller('lobbyCtrl', function($scope, $http, $rootScope, lobbyFeed) {
     	$scope.g = lobbyFeed;
     	$scope.template = 'templates/lobby.html';
+
+    	$scope.sendChat = function(ev) {
+    		if(ev.which == 13) {
+    			var message = ev.target.value;
+    			ev.target.value = '';
+    			$rootScope.$broadcast('sendChat', message);
+    			var postData = { action: 'sendChat', message: message }
+    			$http.post(apiURL,  postData, {responseType:'json'}).
+		        	success(function(r, status) {});
+    		}
+    	}
 
     	$scope.onloadTemp = function() {
     		if($('#chatFeed').length > 0) {
@@ -129,7 +140,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     var modalInstanceCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
-
+    	console.log('dddd');
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
 
     	$scope.cancel = function () {
@@ -177,6 +188,18 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			});
 		}
 
+		$scope.$on('sendChat', function(event, message) {
+			$scope.g.chat['deleteme'] = {
+				type: 'chat',
+				usertype: $scope.g.userData.usertype,
+				chatId: 'deleteme',
+				username: $scope.g.userData.username,
+				message: message,
+				gtime: window.serverTime
+			}
+			baselineChat();
+		});
+
     	$scope.fetch = function(obj, count) {
         	var q = $q.defer()
         	$http.post(apiURL,  { action: 'lobbyFeed', count: count }, { responseType:'json', withCredentials: true })
@@ -185,6 +208,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
 				for(i in r.chat) {
 	        		if(typeof obj.chat[i] == 'undefined') {
+	        			delete obj.chat['deleteme'];
 	        			obj.chat[i] = r.chat[i];
 	        			baselineChat();
 	        		}else{
