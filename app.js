@@ -32,6 +32,8 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     		link: function(scope, elem, attrs) {
 				scope.upload = 'Upload';
 				scope.warning = '';
+				var model = attrs.ctrlModel || uploadFile;
+				scope.$parent[model] = { filename: '', data: '' };
     			scope.click = function() {
     				inputF = elem.find('input[type="file"]');
     				textA = elem.find('textarea');
@@ -58,15 +60,13 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 				          				scope.warning = 'File too large.';
 				          			}
 				          		}
-
-				          		var model = attrs.ctrlModel || uploadFile;
 				          		console.log(filename, ext, byteSize);
 				          		if(scope.warning == '') {
 					          		//textA.val(b64);
-					          		scope.$parent[model] = b64;
+					          		scope.$parent[model] = { filename: filename, data: b64 };
 					          		scope.upload = 'Upload : ' + filename;
 				          		}else{
-				          			scope.$parent[model] = '';
+				          			scope.$parent[model] = { filename: '', data: '' };
 					          		scope.upload = 'Upload';
 				          		}
 				            }
@@ -155,7 +155,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 				email: $scope.userData.email,
 				deckBack: $scope.userData.deckBack,
 				password: $scope.userData.password,
-				avatar: $scope.avatarUpload
+				avatar: $scope.avatarUpload.data
 			}
 			$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
 			success(function(r, status) {
@@ -171,7 +171,46 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     var deckModalCtrl = function($scope, $modalInstance, $http, deckData, deckId) {
     	console.log(deckId);
-    	$scope.deck = jQuery.extend({}, deckData.list[deckId] );
+    	if(deckId.split(' ')[0] == 'new') {
+    		$scope.deck = { 
+    			deckId: 'new',
+    			type: deckId.split(' ')[1],
+    			textdeck: {
+    				main: '', main2: '', hand: '', play: '', sb: '', alt: ''
+    			}
+    			
+    		};
+    	}else{
+    		$scope.deck = jQuery.extend({}, deckData.list[deckId] );
+    	}
+    	
+
+    	$scope.saveDeck = function() {
+    		var postData = {
+				action: 'logback',
+				deckId: $scope.deck.deckId,
+				deckType: $scope.deck.type,
+				deckCards: $scope.deck.textdeck.main,
+				deck2Cards: $scope.deck.textdeck.main2,
+				handCards: $scope.deck.textdeck.hand,
+				playCards: $scope.deck.textdeck.play,
+				sideboardCards: $scope.deck.textdeck.sb,
+				altCards: $scope.deck.textdeck.alt,
+
+				name: $scope.deck.name,
+				fetchUrl: $scope.deck.fetchUrl,
+				uploadDeck_support: $scope.deckUpload.filename,
+				uploadDeck: $scope.deckUpload.data,
+			}
+    		$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
+        	success(function(r, status) {
+            	$scope.deck.fetchUrl = '';
+        	});
+    	}
+
+    	$scope.deleteDeck = function() {
+
+    	}
 
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
@@ -184,7 +223,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.decks = deckData;
 
     	$scope.logout = function() {
-			$http.post(apiURL,  { action: 'logout' }, {responseType:'json', withCredentials: true }).
+			$http.post(apiURL,  { action: 'logout' }, { responseType:'json', withCredentials: true }).
         	success(function(r, status) {
             	if(r.status == 'success') {
             		console.log('User Logged Out');

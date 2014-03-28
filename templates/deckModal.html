@@ -1,12 +1,15 @@
 <h2>{{deck.type}}: <span class="upperCase">{{deck.name}}</span></h2>
-<form ng-submit="">
+<form ng-submit="saveDeck()">
   <div class="row">
     <div class="large-4 columns">
 		<label>Deck Title
 			<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
 		</label>
-		<a href="#" class="button expand secondary">Upload Deck File</a>
-		<a href="#" class="button expand secondary">Fetch Deck URL</a>
+		<label>Fetch deck from URL
+			<input type="url" placeholder="http://" ng-model="deck.fetchUrl"/>
+		</label>
+		<upload max-size="150000" file-extentions="txt dec lfd" ctrl-model="deckUpload"></upload>
+		
     </div>
     
     <div class="large-4 columns">
@@ -24,19 +27,23 @@
 		</label>
 
     	<label ng-if="deck.type == 'MTG'">Sideboard
-			<textarea placeholder="Sideboard Cards, list format" style="height: 125px;"></textarea>
+			<textarea placeholder="Sideboard Cards, list format" style="height: 125px;" ng-model="deck.textdeck.sb">
+			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'MTG'">Alt Cards
-			<textarea placeholder="Alt Cards, list format" style="height: 125px;"></textarea>
+			<textarea placeholder="Alt Cards, list format" style="height: 125px;" ng-model="deck.textdeck.alt">
+			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'MTG' || deck.type == 'L5R' || deck.type == 'ST2'">Starts in Play
-			<textarea placeholder="Starts in Play Cards, list format" style="height: 125px;"></textarea>
+			<textarea placeholder="Starts in Play Cards, list format" style="height: 125px;" ng-model="deck.textdeck.play">
+			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'TSP'">Starts in Hand
-			<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;"></textarea>
+			<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;" ng-model="deck.textdeck.hand">
+			</textarea>
 		</label>
 
     </div>
