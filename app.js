@@ -50,7 +50,8 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 				          		var ext = filename.split('.').pop();
 
 				          		if(typeof attrs.fileExtentions != 'undefined') {
-				          			if(jQuery.inArray( ext, attrs.fileExtentions.split(' ') )) {
+				          			if(jQuery.inArray( ext, attrs.fileExtentions.split(' ')) < 0) {
+				          				console.log(attrs.fileExtentions.split(' '), ext, jQuery.inArray( ext, attrs.fileExtentions.split(' ')));
 				          				scope.warning = 'File type invalid.';
 				          			}
 				          		}
@@ -169,7 +170,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		window.pjh = $scope;
     }
 
-    var deckModalCtrl = function($scope, $modalInstance, $http, deckData, deckId) {
+    var deckModalCtrl = function($scope, $modalInstance, $http, $rootScope, deckData, deckId) {
     	console.log(deckId);
     	if(deckId.split(' ')[0] == 'new') {
     		$scope.deck = { 
@@ -178,16 +179,19 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     			textdeck: {
     				main: '', main2: '', hand: '', play: '', sb: '', alt: ''
     			}
-    			
     		};
     	}else{
     		$scope.deck = jQuery.extend({}, deckData.list[deckId] );
     	}
     	
+    	$scope.$on('doneDeckReload', function(event) {
+    		$scope.deck = jQuery.extend({}, deckData.list[deckId] );
+    	});
 
     	$scope.saveDeck = function() {
+    		$scope.showAlert = false;
     		var postData = {
-				action: 'logback',
+				action: 'saveDeck',
 				deckId: $scope.deck.deckId,
 				deckType: $scope.deck.type,
 				deckCards: $scope.deck.textdeck.main,
@@ -197,14 +201,21 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 				sideboardCards: $scope.deck.textdeck.sb,
 				altCards: $scope.deck.textdeck.alt,
 
-				name: $scope.deck.name,
+				deckName: $scope.deck.name,
 				fetchUrl: $scope.deck.fetchUrl,
 				uploadDeck_support: $scope.deckUpload.filename,
 				uploadDeck: $scope.deckUpload.data,
 			}
     		$http.post(apiURL,  postData, { responseType:'json', withCredentials: true }).
         	success(function(r, status) {
+				$scope.showAlert = { type: r.status, message: r.message };
+				if(r.status == 'success') {
+					$scope.deck.deckId = r.deckId;
+					$rootScope.$broadcast('reloadDecks');
+
+				}
             	$scope.deck.fetchUrl = '';
+            	console.log(r);
         	});
     	}
 
@@ -218,7 +229,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     }
 
     // userBar controller will control all lobbyFeed data for all other controllers
-    untap.controller('userBar', function($scope, $q, $http, $timeout, $modal, lobbyFeed, deckData) {
+    untap.controller('userBar', function($scope, $q, $http, $timeout, $modal, $rootScope, lobbyFeed, deckData) {
     	$scope.g = lobbyFeed;
     	$scope.decks = deckData;
 
@@ -268,6 +279,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			.success(function(r, status) {
 				$scope.decks.list = r;
 				$scope.deckCount = Object.keys(r).length;
+				$rootScope.$broadcast('doneDeckReload');
 			})
 		}
 
