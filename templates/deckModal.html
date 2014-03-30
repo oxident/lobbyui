@@ -7,11 +7,13 @@
 			<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
 		</label>
 		<label>Fetch deck from URL
-		<helptip tip="Imports deck from deck building site URL"></helptip>
+		<helptip tip="Imports deck from deck building site URL, most deck building sites supported."></helptip>
 			<input type="url" placeholder="http://" ng-model="deck.fetchUrl"/>
 		</label>
-		<upload max-size="150000" file-extentions="txt dec lfd" ctrl-model="deckUpload"></upload>
-		
+		<label>Import deck from file.
+			<helptip tip="txt dec l5d o8d files supported"></helptip>
+			<upload max-size="150000" file-extentions="txt dec l5d o8d" ctrl-model="deckUpload"></upload>
+		</label>
     </div>
     
     <div class="large-4 columns">
