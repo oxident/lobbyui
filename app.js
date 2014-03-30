@@ -2,11 +2,11 @@ window.serverTime = 0;
 window.apiURL = 'http://www.untap.in/apiv2.php';
 
 	var untap = angular.module('untap', ['mm.foundation'])
-	.filter('to_trusted', ['$sce', function($sce){
+	.filter('to_trusted', ['$sce', function($sce) {
         return function(text) {
 			return $sce.trustAsHtml(text);
         };
-    }]).filter('agotime', ['$sce', function($sce){
+    }]).filter('agotime', ['$sce', function($sce) {
         return function(time) {
         	var seconds = serverTime-parseInt(time);
         	var interval;
@@ -19,7 +19,18 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         };
     }]);
 
-    untap.directive('upload', function(){
+    untap.directive('helptip', function() {
+    	return {
+    		restrict: 'E',
+    		scope: {
+		      tip: "@"
+		    },
+    		template: '<span class="label secondary right" popover="{{tip}}" popover-trigger="mouseenter" popover-placement="bottom" >Help</span>'
+    		
+    	}
+    });
+
+    untap.directive('upload', function() {
     	return {
     		restrict: 'E',
     		template: '<div><a class="button expand secondary small" ng-click="click()">'+
@@ -324,7 +335,10 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 	        	q.resolve(loggedin);
 				
 			}).error(function(){
-				console.log('failed')
+				console.log('failed');
+				$timeout(function(){
+					loop(0);
+				}, 5000);
 			});
 
         	return q.promise;

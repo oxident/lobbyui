@@ -7,6 +7,7 @@
 			<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
 		</label>
 		<label>Fetch deck from URL
+		<helptip tip="Imports deck from deck building site URL"></helptip>
 			<input type="url" placeholder="http://" ng-model="deck.fetchUrl"/>
 		</label>
 		<upload max-size="150000" file-extentions="txt dec lfd" ctrl-model="deckUpload"></upload>
@@ -17,6 +18,7 @@
 	    <label>Deck 
 	    <span ng-if="deck.type == 'L5R'">(Fate)</span>
 	    <span ng-if="deck.type == 'ST2'">(Draw)</span>
+	    <helptip tip="Each line is quantity followed by card name '4 name of card'."></helptip>
 			<textarea placeholder="Deck Cards, list format" style="height: 450px;" ng-model="deck.textdeck.main"></textarea>
 		</label>
     </div>
@@ -28,21 +30,25 @@
 		</label>
 
     	<label ng-if="deck.type == 'MTG'">Sideboard
+    		<helptip tip="Sideboard cards can be swapped for mainboard cards via the game menu when in game."></helptip>
 			<textarea placeholder="Sideboard Cards, list format" style="height: 125px;" ng-model="deck.textdeck.sb">
 			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'MTG'">Alt Cards
+		<helptip tip="Custom cards and tokens can be created by using the ^ syntax to refer to a URL '4 name of card^http://www.urlto.com/card.jpg'."></helptip>
 			<textarea placeholder="Alt Cards, list format" style="height: 125px;" ng-model="deck.textdeck.alt">
 			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'MTG' || deck.type == 'L5R' || deck.type == 'ST2'">Starts in Play
+			<helptip tip="Starts in play cards start in the play area face up."></helptip>
 			<textarea placeholder="Starts in Play Cards, list format" style="height: 125px;" ng-model="deck.textdeck.play">
 			</textarea>
 		</label>
 
 		<label ng-if="deck.type == 'TSP'">Starts in Hand
+			<helptip tip="Hand cards start in your hand ready to play."></helptip>
 			<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;" ng-model="deck.textdeck.hand">
 			</textarea>
 		</label>
