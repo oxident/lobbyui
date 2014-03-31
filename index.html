@@ -22,7 +22,7 @@
 	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.1.1/js/foundation.min.js"></script>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.js"></script>
-    <script type="text/javascript" src="http://www.untap.in/lobbyui/js/mm-foundation-tpls-0.1.0.min.js"></script>
+    <script type="text/javascript" src="http://www.untap.in/lobbyui/js/mm-foundation-tpls-0.1.0.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
 	<style type="text/css">
 
@@ -43,6 +43,7 @@
 	#gamesList>div { margin-bottom: 3px; }
 	
 	ul.f-dropdown { background-color: #444444; }
+	ul.f-dropdown>li>a { color: white; }
 	ul.f-dropdown>li:hover { background-color: #5e5e5e; }
 
 	h4>small { color: white; }
@@ -63,14 +64,14 @@
 </head>
 <body>
 <!-- fixed navigation -->
- <div class="fixed">
+ <div class="">
   <nav class="top-bar" data-topbar id="menuTopBar" ng-controller="userBar">
     <ul class="title-area">
       <!-- Title Area -->
       <li class="name">
         <h1>
           <a href="#">
-            UnTap.in :: Beta - This is a mock up concept of a new lobby UI, pretty much nothing works yet.
+            UnTap.in :: Beta - This is a mock up concept of a new lobby UI.
           </a>
         </h1>
       </li>
@@ -83,7 +84,7 @@
         <li class="has-dropdown">
           <a href="#" class="uppercase">UnTap</a>
           <ul class="dropdown">
-            <li><a href="#" ng-if="g.userData.username != 'null'" data-reveal-id="fundModal" data-reveal>Funding</a></li>
+            <li><a ng-if="g.userData.username != 'null'" ng-click="genModal('fundingModal')">Funding</a></li>
             <li><a href="#">FAQ</a></li>
             <li><a href="#" ng-if="g.userData.username != 'null'">Bug Tracker</a></li>
             <li class="divider"></li>
@@ -96,9 +97,9 @@
           <ul class="dropdown">
             <li><label>My Decks <span class="right">{{deckCount}}/{{g.userData.deckCount}}</span></label></li>
             <li ng-repeat="deck in decks.list | orderBy:'type'"><a ng-click="deckModal(deck.deckId)">{{deck.type}}: {{deck.name}} <i>({{deck.cardCount}})</i></a></li>
-            <li class="divider"></li>
-            <li><label>Create</label></li>
-            <li class="has-dropdown">
+            <li class="divider" ng-if="deckCount != g.userData.deckCount"></li>
+            <li ng-if="deckCount != g.userData.deckCount"><label>Create</label></li>
+            <li class="has-dropdown" ng-if="deckCount != g.userData.deckCount">
               <a href="#" class="">New Deck</a>
               <ul class="dropdown">
                 <li><a ng-click="deckModal('new MTG')">MTG</a></li>
@@ -113,7 +114,7 @@
         <li class="has-dropdown" ng-if="g.userData.username != 'null'">
           <a href="#" class="upperCase">{{g.userData.username}}</a>
           <ul class="dropdown">
-            <li><a ng-click="openModal()">Profile</a></li>
+            <li><a ng-click="accountModal()">Profile</a></li>
             <li><a href="#">Game History</a></li>
             <li class="divider"></li>
             <li><a ng-click="logout()">Log Out</a></li>

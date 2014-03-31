@@ -19,13 +19,13 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         };
     }]);
 
-    untap.directive('helptip', function() {
+    untap.directive('helptip', function($position) {
     	return {
     		restrict: 'E',
     		scope: {
 		      tip: "@"
 		    },
-    		template: '<span class="label secondary right" popover="{{tip}}" popover-trigger="mouseenter" popover-placement="bottom" >Help</span>'
+    		template: '<span class="label secondary right" popover="{{tip}}" popover-trigger="mouseenter" popover-placement="left" >Help</span>'
     		
     	}
     });
@@ -118,8 +118,6 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     				$(document).foundation();
     			}, 750);
     		}
-    		//trigger to load deckData
-    		$rootScope.$broadcast('reloadDecks');
     	}
 
     	$scope.changeTemplate = function(template) {
@@ -152,7 +150,14 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
     //controllers for modals
 
-    var modalInstanceCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
+    var genModalCtrl = function($scope, $modalInstance, lobbyFeed) {
+    	$scope.g = lobbyFeed;
+    	$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+    }
+
+    var accountModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
     	$scope.g = lobbyFeed;
     	$scope.userData = jQuery.extend({}, lobbyFeed.userData );
 
@@ -181,7 +186,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		window.pjh = $scope;
     }
 
-    var deckModalCtrl = function($scope, $modalInstance, $http, $rootScope, deckData, deckId) {
+    var deckModalCtrl = function($scope, $modalInstance, $http, $rootScope, $position, deckData, deckId) {
     	console.log(deckId);
     	if(deckId.split(' ')[0] == 'new') {
     		$scope.deck = { 
@@ -196,7 +201,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	}
     	
     	$scope.$on('doneDeckReload', function(event) {
-    		$scope.deck = jQuery.extend({}, deckData.list[deckId] );
+    		$scope.deck = jQuery.extend({}, deckData.list[$scope.deck.deckId] );
     	});
 
     	$scope.saveDeck = function() {
@@ -222,16 +227,23 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 				$scope.showAlert = { type: r.status, message: r.message };
 				if(r.status == 'success') {
 					$scope.deck.deckId = r.deckId;
+					console.log(r.deckId)
 					$rootScope.$broadcast('reloadDecks');
-
 				}
             	$scope.deck.fetchUrl = '';
             	console.log(r);
         	});
     	}
 
-    	$scope.deleteDeck = function() {
-
+    	$scope.deleteDeck = function(deldeckId) {
+    		var r=confirm("Delete this deck?");
+			if (r==true) {
+				$http.post(apiURL,  { action: 'deleteDeck', deckId: deldeckId }, { responseType:'json', withCredentials: true }).
+    			success(function(r, status) {
+    				$rootScope.$broadcast('reloadDecks');
+    				$scope.cancel();
+    			});
+			}
     	}
 
     	$scope.cancel = function () {
@@ -245,6 +257,8 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.decks = deckData;
 
     	$scope.logout = function() {
+    		$scope.g.userData.username = 'null';
+
 			$http.post(apiURL,  { action: 'logout' }, { responseType:'json', withCredentials: true }).
         	success(function(r, status) {
             	if(r.status == 'success') {
@@ -253,10 +267,17 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         	});
 		}
 
-		$scope.openModal = function() {
+		$scope.accountModal = function() {
 			var modalInstance = $modal.open({
 				templateUrl: 'templates/accountModal.html',
-				controller: modalInstanceCtrl
+				controller: accountModalCtrl
+			});
+		}
+
+		$scope.genModal = function(which) {
+			var modalInstance = $modal.open({
+				templateUrl: 'templates/'+which+'.html',
+				controller: genModalCtrl
 			});
 		}
 
@@ -345,7 +366,13 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         }
 
     	var loop = function (loopCount) {
-        	if(loopCount == 0) { var loopTime = 1; }else{ var loopTime = 3000; }
+        	if(loopCount == 0) {
+        		var loopTime = 1;
+        		$scope.getDecks();
+        	}else{
+        		var loopTime = 3000;
+        	}
+
         	$timeout(function(){
 	        	$scope.promise = $scope.fetch($scope.g, loopCount);
 		        loopCount++;

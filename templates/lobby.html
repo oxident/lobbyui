@@ -41,20 +41,21 @@
 		    </aside>
 
 		    <aside class="right-off-canvas-menu">
-		      <ul class="off-canvas-list">
+		    <ul class="off-canvas-list">
 		        <li><label>Users Online <span class="right">{{g.online.length}} </span></label></li>
 		        <li ng-repeat="user in g.online | orderBy:'username'">
-		        	<a href="#" class="upperCase" data-dropdown="{{user.username}}_dropDown">{{user.username}} 
+		        	<a class="upperCase" dropdown-toggle="#dropDown_{{user.username}}">{{user.username}}
 			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
 			        	<i class="fi-dollar right" ng-if="user.gc == 'true'"></i>
 		        	</a>
-					<ul id="{{user.username}}_dropDown" class="f-dropdown" data-dropdown-content>
-						<li><a href="#"><i class="fi-comment-quotes" style="margin-right:5px;"></i> Private Message</a></li>
-						<li><a href="#"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Add Friend</a></li>
-						<li><a href="#"><i class="fi-prohibited" style="margin-right:5px;"></i> Block User</a></li>
-					</ul>
-		        </li> 
-		      </ul>
+		        </li>
+	      	</ul>
+	      	<ul id="dropDown_cokeeffekt" class="f-dropdown">
+				<li><a href="#"><i class="fi-comment-quotes" style="margin-right:5px;"></i> Private Message</a></li>
+				<li><a href="#"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Add Friend</a></li>
+				<li><a href="#"><i class="fi-prohibited" style="margin-right:5px;"></i> Block User</a></li>
+			</ul>
+		    
 		    </aside>
 
 		    <section class="main-section" style="padding: 0 15px;">
