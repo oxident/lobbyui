@@ -105,6 +105,23 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     		}
     	}
 
+    	$scope.clickUser = function(username) {
+			$scope.selectedUser = username;
+			
+		}
+
+		$scope.addFriend = function() {
+			console.log($scope.selectedUser, 'addFriend');
+		}
+
+		$scope.addBlock = function() {
+			console.log($scope.selectedUser, 'addBlock');
+		}
+
+		$scope.pmUser = function() {
+			console.log($scope.selectedUser, 'pmUser');
+		}
+
     	$scope.onloadTemp = function() {
     		if($('#chatFeed').length > 0) {
     			//fix caht height window height with no scroll
