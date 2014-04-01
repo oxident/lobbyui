@@ -18,15 +18,16 @@
     <div class="large-4 columns">
 	    <label>Deck 
 	    <span ng-if="deck.type == 'L5R'">(Fate)</span>
-	    <span ng-if="deck.type == 'ST2'">(Draw)</span>
+	    <span ng-if="deck.type == 'ST2' || deck.type == 'MLP'">(Draw)</span>
 	    <helptip tip="Each line is quantity followed by card name '4 name of card'."></helptip>
 			<textarea placeholder="Deck Cards, list format" style="height: 450px;" ng-model="deck.textdeck.main"></textarea>
 		</label>
     </div>
     <div class="large-4 columns">
-    	<label ng-if="deck.type == 'L5R' || deck.type == 'ST2'">Deck 2
+    	<label ng-if="deck.type == 'L5R' || deck.type == 'ST2' || deck.type == 'MLP'">Deck 2
 	    <span ng-if="deck.type == 'L5R'">(Dynasty)</span>
 	    <span ng-if="deck.type == 'ST2'">(Dilemma)</span>
+	    <span ng-if="deck.type == 'MLP'">(Problems)</span>
 			<textarea placeholder="Deck 2 Cards, list format" style="height: 300px;" ng-model="deck.textdeck.main2"></textarea>
 		</label>
 
@@ -48,7 +49,7 @@
 			</textarea>
 		</label>
 
-		<label ng-if="deck.type == 'TSP'">Starts in Hand
+		<label ng-if="deck.type == 'TSP' || deck.type == 'MLP'">Starts in Hand
 			<helptip tip="Hand cards start in your hand ready to play."></helptip>
 			<textarea placeholder="Starts in Hand Cards, list format" style="height: 125px;" ng-model="deck.textdeck.hand">
 			</textarea>
