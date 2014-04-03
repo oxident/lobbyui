@@ -12,7 +12,7 @@
 <div id="gamesList">
 	<div class="row" ng-repeat="game in g.gameList">
 		<div class="medium-6 small-8 columns">
-			<h4>{{game.gameName}} <small>{{game.username}}</small></h4>
+			<h4>{{game.gameName}} <small class="right" style="margin-top:17px;">{{game.username}}</small></h4>
 		</div>
 		<div class="medium-2 small-4 columns">
 			<a href="#" class="button expand secondary disabled small">{{game.gameType}}</a>
@@ -25,7 +25,7 @@
 
 	<div class="row" ng-repeat="game in g.specList">
 		<div class="medium-6 small-8 columns">
-			<h4>{{game.gameName}} <small>{{game.user1}} vs {{game.user2}}</small></h4>
+			<h4>{{game.gameName}} <small class="right" style="margin-top:17px;">{{game.user1}} vs {{game.user2}}</small></h4>
 		</div>
 		<div class="medium-2 small-4 columns">
 			<a href="#" class="button expand secondary disabled small">{{game.gameType}}</a>

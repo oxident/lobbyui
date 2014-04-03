@@ -103,23 +103,34 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     			$http.post(apiURL,  postData, {responseType:'json'}).
 		        	success(function(r, status) {});
     		}
+    		if(ev.which == 38) {
+				$scope.pmUser();
+    		}
+    	}
+
+    	$scope.quickPM = function(username) {
+    		$scope.selectedUser = username;
+    		$scope.pmUser();
     	}
 
     	$scope.clickUser = function(username) {
 			$scope.selectedUser = username;
-			
 		}
 
-		$scope.addFriend = function() {
-			console.log($scope.selectedUser, 'addFriend');
+		$scope.arFriend = function() {
+			$http.post(apiURL,  {action: 'arFriend', username: $scope.selectedUser }, {responseType:'json', withCredentials: true }).
+        	success(function(r, status) { })
 		}
 
-		$scope.addBlock = function() {
-			console.log($scope.selectedUser, 'addBlock');
+		$scope.arBlock = function() {
+			$http.post(apiURL,  {action: 'arBlock', username: $scope.selectedUser }, {responseType:'json', withCredentials: true }).
+        	success(function(r, status) { })
 		}
 
 		$scope.pmUser = function() {
 			console.log($scope.selectedUser, 'pmUser');
+			$('.exit-off-canvas').trigger('click');
+			$('#chatter').val('@'+$scope.selectedUser+': '+$('#chatter').val()).focus();
 		}
 
     	$scope.onloadTemp = function() {
@@ -323,6 +334,15 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			baselineChat();
 		});
 
+		$scope.getUpdates = function() {
+			$http.post(apiURL,  { action: 'updatesFeed' }, { responseType:'json', withCredentials: true })
+			.success(function(r, status) {
+				$scope.updateFeed = r;
+			})
+		}
+
+		$scope.getUpdates();
+
 		$scope.getDecks = function() {
 			$http.post(apiURL,  { action: 'deckData' }, { responseType:'json', withCredentials: true })
 			.success(function(r, status) {
@@ -387,7 +407,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         		var loopTime = 1;
         		$scope.getDecks();
         	}else{
-        		var loopTime = 3000;
+        		var loopTime = 30000;
         	}
 
         	$timeout(function(){

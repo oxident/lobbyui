@@ -31,11 +31,11 @@
 		      <ul class="off-canvas-list">
 		        <li><label>Friends</label></li>
 		        <li ng-repeat="user in g.friends | orderBy:'username'">
-		        	<a href="#" class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
+		        	<a class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
 		        </li>
 		        <li><label>Blocked</label></li>
 		        <li ng-repeat="user in g.blocks | orderBy:'username'">
-		        	<a href="#" class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
+		        	<a class="upperCase">{{user.username}} <i class="fi-die-three right" ng-if="user.ingame != ''"></i></a>
 		        </li>
 		      </ul>
 		    </aside>
@@ -44,7 +44,9 @@
 		    <ul class="off-canvas-list">
 		        <li><label>Users Online <span class="right">{{g.online.length}} </span></label></li>
 		        <li ng-repeat="user in g.online | orderBy:'username'">
-		        	<a class="upperCase" dropdown-toggle="#userDropDown" ng-click="clickUser(user.username)">{{user.username}}
+		        	<a class="upperCase {{}}" dropdown-toggle="#userDropDown" ng-click="clickUser(user.username)" 
+		        	ng-class="{greenText: user.friends=='true', redText: user.blocks=='true'}">
+		        		{{user.username}}
 			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
 			        	<i class="fi-dollar right" ng-if="user.gc == 'true'"></i>
 		        	</a>
@@ -52,8 +54,8 @@
 	      	</ul>
 	      	<ul id="userDropDown" class="f-dropdown">
 				<li><a ng-click="pmUser()"><i class="fi-comment-quotes" style="margin-right:5px;"></i> Private Message</a></li>
-				<li><a ng-click="addFriend()"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Add Friend</a></li>
-				<li><a ng-click="addBlock()"><i class="fi-prohibited" style="margin-right:5px;"></i> Block User</a></li>
+				<li><a ng-click="arFriend()"><i class="fi-torsos-male-female" style="margin-right:5px;"></i> Add Friend</a></li>
+				<li><a ng-click="arBlock()"><i class="fi-prohibited" style="margin-right:5px;"></i> Block User</a></li>
 			</ul>
 		    
 		    </aside>
@@ -61,7 +63,7 @@
 		    <section class="main-section" style="padding: 0 15px;">
 				<div class="row" id="chatFeed">
 					<div class="small-12 columns" ng-repeat="chat in g.chat">
-						<b class="upperCase {{chat.usertype}}">{{chat.username}}</b> : 
+						<b class="upperCase {{chat.usertype}}" ng-click="quickPM(chat.username)">{{chat.username}}</b> : 
 						<span ng-bind-html="chat.message | to_trusted"></span> 
 						<i class="show-for-medium-up">{{chat.gtime | agotime}} </i></div>
 				</div>

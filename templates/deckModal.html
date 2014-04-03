@@ -1,8 +1,8 @@
-<h2>{{deck.type}}: <span class="upperCase">{{deck.name}}</span></h2>
+<h2>{{deck.type}}: <span class="upperCase">{{deck.name}}</span><small class="right" style="font-size: 12px;">HASH:{{deck.hash}}</small></h2>
 <alert type="showAlert.type" ng-show="showAlert">{{showAlert.message}}</alert>
 <form ng-submit="saveDeck()">
   <div class="row">
-    <div class="large-4 columns">
+    <div class="large-4 medium-12 columns">
 		<label>Deck Title
 			<input type="text" placeholder="Deck Title" ng-model="deck.name" required/>
 		</label>
@@ -10,12 +10,12 @@
 		<helptip tip="Imports deck from deck building site URL, most deck building sites supported."></helptip>
 			<input type="url" placeholder="http://" ng-model="deck.fetchUrl"/>
 		</label>
-		<label>Import deck from file.
+		<label>Import deck from file
 			<helptip tip="txt dec l5d o8d files supported"></helptip>
 			<upload max-size="150000" file-extentions="txt dec l5d o8d" ctrl-model="deckUpload"></upload>
 		</label>
     </div>
-    <div class="large-4 columns">
+    <div class="large-4 medium-6 columns">
 	    <label>Deck 
 	    <span ng-if="deck.type == 'L5R'">(Fate)</span>
 	    <span ng-if="deck.type == 'ST2' || deck.type == 'MLP'">(Draw)</span>
@@ -23,7 +23,7 @@
 			<textarea placeholder="Deck Cards, list format" style="height: 450px;" ng-model="deck.textdeck.main"></textarea>
 		</label>
     </div>
-    <div class="large-4 columns">
+    <div class="large-4 medium-6 columns">
     	<label ng-if="deck.type == 'L5R' || deck.type == 'ST2' || deck.type == 'MLP'">Deck 2
 	    <span ng-if="deck.type == 'L5R'">(Dynasty)</span>
 	    <span ng-if="deck.type == 'ST2'">(Dilemma)</span>
@@ -57,7 +57,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="large-12 columns">
+    <div class="large-12 medium-12 columns">
     	<button type="submit" class="right">Save Deck</button>
     	<a class="button secondary right" ng-click="deleteDeck(deck.deckId)" ng-if="deck.deckId != 'new'">Delete Deck</a>
     </div>

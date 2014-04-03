@@ -41,10 +41,13 @@
 	#gamesList>div:hover { background: rgba(255, 255, 255, 0.1); }
 	#gamesList>div .button { margin: 0px; }
 	#gamesList>div { margin-bottom: 3px; }
-	
+	#downUpdates a { background-color: white; padding: 0 0; line-height: 1.6; }
 	ul.f-dropdown { background-color: #444444; }
 	ul.f-dropdown>li>a { color: white; }
 	ul.f-dropdown>li:hover { background-color: #5e5e5e; }
+
+	.greenText { color: #43ac6a !important; }
+	.redText { color: #f04124 !important; }
 
 	h4>small { color: white; }
 	.fill-link {
@@ -80,8 +83,19 @@
  
     <section class="top-bar-section">
       <ul class="right">
-      	<li><a href="#" data-dropdown="drop2">Updates</a>
-		<div id="drop2" data-dropdown-content class="f-dropdown content">
+      	<li><a data-dropdown="downUpdates" ng-click="getUpdates()">Updates</a>
+		<div id="downUpdates" data-dropdown-content class="f-dropdown content medium">
+		<div class="row">
+			<div class="small-12 columns">
+			<h4>UnTap Updates</h4>
+				<div ng-repeat="item in updateFeed">
+					<blockquote>
+					<span ng-bind-html="item.post | to_trusted"></span> 
+					<cite>{{item.time}} - <a href="{{item.link}}" target="_blank">Comment</a></cite></blockquote>
+				</div>
+			</div>
+
+
 		
 		</div>
 </li>
