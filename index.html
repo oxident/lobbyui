@@ -49,6 +49,11 @@
 	.greenText { color: #43ac6a !important; }
 	.redText { color: #f04124 !important; }
 
+	.sidebar {
+		background: #FAFAFA;
+		padding: 32px 20px;
+	}
+
 	h4>small { color: white; }
 	.fill-link {
 		width: 100%;
@@ -104,7 +109,7 @@
           <a href="#" class="uppercase">UnTap</a>
           <ul class="dropdown">
             <li><a ng-if="g.userData.username != 'null'" ng-click="genModal('fundingModal')">Funding</a></li>
-            <li><a href="#">FAQ</a></li>
+            <li><a ng-click="genModal('faq')">FAQ</a></li>
             <li><a href="#" ng-if="g.userData.username != 'null'">Bug Tracker</a></li>
             <li class="divider"></li>
             <li><a href="#">Admin</a></li>

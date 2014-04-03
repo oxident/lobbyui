@@ -1,0 +1,85 @@
+<div class="row">
+<div class="large-3 medium-4 columns">
+  <div class="sidebar" style="position: fixed; min-width: 250px;">
+    <nav>
+    <ul class="side-nav">
+      <li class="heading">The Basics</li>
+
+      <li><a href="#">Introduction</a></li>
+      <li><a href="#">Deck Building</a></li>
+
+      <li class="divider"></li>
+
+    </ul>
+    </nav>
+  </div>
+</div>
+<div class="large-9 medium-8 columns">
+  <h2>FAQ <small>The Complete UnTap.in How to</small></h2>
+  <hr>
+  <h3>Introduction</h3>
+  <p>UnTap is a multiplayer CCG deck tester. Decks are built and play-tested from various formats against other opponents online. Our unique deck builder uses API searches to build your deck ready to play-test simple and mess free. Everything is in the browser no downloads or plugins required.</p>
+  
+  <hr>
+
+  <h3>Deck Building</h3>
+  <p>Each CCG type has its own set deck field options, but for the most part all cards are added in the same way.</p>
+
+  <h4>Basic Input</h4>
+  <div class="row">
+    <div class="large-6 columns">
+    <h6>DECK INPUT</h6>
+      <div class="panel">
+        <code>
+        4 Mystic Enchant <br />
+        4 Flaming Sword <br />
+        2 Dragon Breath
+        </code>
+      </div>
+    </div>
+    <div class="large-6 columns">
+    <h6>EXPLAINED</h6>
+      <div class="panel callout">
+        <p>
+          Each Line is prefixed with a quanity followed by the name of the card. This applies to all card input areas (Main/Secondary deck, Sideboard, Alt Cards)
+          </p>
+      </div>
+    </div>
+  </div>
+
+  <h4>Importing a Deck</h4>
+  <p>There are two methods for importing decks uploading a deck file or fetching from a deck URL. Uploading Deck files supports <strong>txt dec l5d o8d</strong> file types.<br>
+  Fetching decks from URL works by pulling a deck list down from a URL, if the page has a deck list on it, UnTap will do its best to import it. Not all URLs are supported, please make sure that the deck page is public and login is required to access the page.</p>
+  <br />
+
+  <h4>Custom Cards</h4>
+  <p>Since UnTap uses remote URLs for all its card images you can by pass the card search API and manually add a custom image URL for a card. Custom cards will flag the deck as containing custom cards to prevent people changing card text, or atleast making you cautious to the know that the card is custom.</p>
+  <div class="row">
+    <div class="large-7 columns">
+      <h6>DECK INPUT</h6>
+      <div class="panel">
+        <code>
+        4 Token Frog^http://url.img/tokenfrog.jpg <br />
+        4 Red Monkey^http://custom.art/monkey.jpg <br />
+        2 Rules card^http://rules.com/card.jpg
+        </code>
+      </div>
+    </div>
+    <div class="large-5 columns">
+    <h6>EXPLAINED</h6>
+      <div class="panel callout">
+        <p>
+          Each line is still prefixed with a quantity, but appending ^ then a URL to the card name will bypass the API search
+          </p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+</div>
+</div>
+
+
+</div>
+<a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
