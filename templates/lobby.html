@@ -1,16 +1,5 @@
-<div class="row" id="menuButtons">
-	<div class="small-6 columns">
-	  	<a class="button expand disabled">Lobby</a>
-	</div>
-	<div class="small-6 columns">
-	  	<a href="#" class="button expand success" ng-click="changeTemplate('gamesList')">Games 
-	  		<i ng-if="g.gameList.length > 0" style="color: black;">{{g.gameList.length}}</i>
-	 	</a>
-	</div>
-</div>
-
-<div class="row" id="lobbyChat">
-	<div class="small-12 columns">
+<div class="row" id="lobbyChat" style="margin-top: 15px;">
+	<div class="small-12 medium-8 columns">
 		<div class="off-canvas-wrap">
 		  <div class="inner-wrap">
 		    <nav class="tab-bar" id="menuLobbyBar">
@@ -45,7 +34,7 @@
 		        <li><label>Users Online <span class="right">{{g.online.length}} </span></label></li>
 		        <li ng-repeat="user in g.online | orderBy:'username'">
 		        	<a class="upperCase {{}}" dropdown-toggle="#userDropDown" ng-click="clickUser(user.username)" 
-		        	ng-class="{greenText: user.friends=='true', redText: user.blocks=='true'}">
+		        	ng-class="{redText: user.blocks=='true', greenText: user.friends=='true'}">
 		        		{{user.username}}
 			        	<i class="fi-die-three right" ng-if="user.ingame != ''"></i> 
 			        	<i class="fi-dollar right" ng-if="user.gc == 'true'"></i>
@@ -63,13 +52,23 @@
 		    <section class="main-section" style="padding: 0 15px;">
 				<div class="row" id="chatFeed">
 					<div class="small-12 columns" ng-repeat="chat in g.chat">
-						<b class="upperCase {{chat.usertype}}" ng-click="quickPM(chat.username)">{{chat.username}}</b> : 
+						<b class="upperCase"
+						ng-class="{redText: chat.usertype=='mod', blueText: chat.usertype=='norm', greenText: chat.usertype=='friend'}"
+						ng-click="quickPM(chat.username)">{{chat.username}}</b> : 
 						<span ng-bind-html="chat.message | to_trusted"></span> 
-						<i class="show-for-medium-up">{{chat.gtime | agotime}} </i></div>
+						<i class="show-for-medium-up">{{chat.gtime | agotime}} </i>
+					</div>
 				</div>
 				<div class="row">
 					<div class="small-12">
-						<input type="text" id="chatter" ng-keyup="sendChat($event)"/>
+						<div class="row collapse">
+					        <div class="small-11 columns">
+					          <input type="text" id="chatter" ng-keyup="sendChat($event)"/>
+					        </div>
+					        <div class="small-1 columns">
+					          <a href="#" class="button postfix secondary" style="margin-bottom:0;">Send</a>
+					        </div>
+					    </div>
 					</div>
 				</div>	
 
@@ -80,4 +79,159 @@
 		  </div>
 		</div>
 	</div>
+	<div class="small-4 columns show-for-medium-up">
+		<div class="panel">
+			<div class="row collapse">
+				<div class="small-8 columns">
+					<h2>Games <small>{{g.gameList.length}}</small></h2>
+				</div>
+				<div class="small-4 columns">
+					<a data-dropdown="newGameDrop" class="button expand small success"><i class="fi-plus"></i> New Game</a>
+				</div>
+			</div>
+			<div id="newGameDrop" data-dropdown-content class="f-dropdown content small">
+			<p ng-if="g.userData.validemail != 'true'">You must validate your email address before starting games, you can do this from your profile page.</p>
+			<form ng-if="g.userData.validemail == 'true'" ng-submit="startGame()">
+				<div class="row">
+				    <div class="small-12 columns">
+				      <label>Game Name
+				        <input type="text" placeholder="Game Name" required/>
+				      </label>
+				    </div>
+				</div>
+				<div class="row" ng-if="g.userData.canLock == 'true'">
+				    <div class="small-12 columns">
+				      <label>Password
+				        <input type="text" placeholder="Password to join, blank for none" />
+				      </label>
+				    </div>
+				</div>
+				<div class="row">
+				    <div class="small-6 columns">
+				      <label>Type
+				        <select ng-model="newGame_deckType" ng-options="value for value in decks.deckTypes" required></select>
+				      </label>
+				    </div>
+				    <div class="small-6 columns">
+				      <label>Players
+				        <select><option>2</option><option>Solo</option></select>
+				      </label>
+				    </div>
+				</div>
+				<div class="row">
+				    <div class="small-12 columns">
+				    	<button type="submit" class="expand small">Start Game</button>
+				    </div>
+				</div>
+			</form>
+			</div>
+
+			<div id="gamesPanel">
+				<div ng-repeat="game in g.gameList" class="row collapse games" ng-class="{'hide': decks.deckTypes.indexOf(game.gameType) == -1}">
+		            <div class="small-10 columns">
+		                <h5 class="greenText">{{game.gameName}} <small>{{game.username}}</small></h5>
+		            </div>
+		            <div class="small-2 columns">
+		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
+		            </div>
+		            <a href="#" class="button success tiny hideJoin" ng-if="game.locked == 'false'"><i class="fi-play"></i> Join Game</a>
+					<a href="#" class="button alert tiny hideJoin" ng-if="game.locked == 'true'"><i class="fi-lock"></i> Join Game</a>
+		        </div>
+
+				<div class="row collapse games" ng-repeat="game in g.specList">
+		            <div class="small-10 columns">
+		                <h5>{{game.gameName}} <small>{{game.user1}} vs {{game.user2}}</small></h5>
+		            </div>
+		            <div class="small-2 columns">
+		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
+		            </div>
+		            <a href="#" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
+		        </div>
+	        </div>
+		</div>
+	</div>
 </div>
+<script type="text/javascript">
+	$('body').on('mouseenter', '.games', function() {
+	    $(this).find('.hideJoin').addClass('showJoin');
+	    $(this).bind('mouseleave', function() {
+	        $(this).unbind('mouseleave');
+	        $(this).find('.hideJoin').removeClass('showJoin');
+	    });
+	});
+</script>
+<style type="text/css">
+
+	#chatFeed {
+		overflow: scroll;
+		background-color: rgba(0,0,0,0.5);
+		color: #cccccc;
+	}
+
+	#chatFeed>div:nth-child(odd) {
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	#chatFeed>div>i {
+		font-size:10px;
+	}
+
+	#chatFeed>div {
+		padding-top: 3px;
+		padding-bottom: 3px;
+	}
+
+ 	#chatter {
+ 		margin-bottom: 0px;
+ 	}
+
+	i[class^='fi'] {
+		margin-right: 5px;
+	}
+
+	#lobbyChat .panel {
+		background-color: rgba(51,51,51,0.5);
+		padding: 1rem;
+		margin-bottom: 0;
+	}
+	#lobbyChat h2 {
+		color: white;
+	}
+
+	.games .tiny {
+	    margin: 0;
+	    margin-bottom: 1px;
+	}
+	.games h5 {
+		color: white;
+	}
+
+	.games:hover h5 {
+		color: #008cba;
+	}
+
+	.games h5>small {
+		color: black;
+		float: right;
+		margin: 12px;
+	}
+	.games .hideJoin {
+	    position: absolute;
+	    top: 0;
+	    right: -120px;
+	    -webkit-transition: 250ms linear;
+	    -moz-transition: 250ms linear;
+	    -ms-transition: 250ms linear;
+	    -o-transition: 250ms linear;
+	    transition: 250ms linear;
+	}
+
+	.games .showJoin {
+	    right: 0px;
+	}
+
+	.games {
+	    overflow:hidden;
+	    position: relative;
+	}
+</style>

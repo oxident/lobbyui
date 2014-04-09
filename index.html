@@ -30,14 +30,7 @@
 		background-image: url('http://www.untap.in/img/1.gif');
 	}
 
-	#chatFeed { overflow: scroll; background-color: rgba(0,0,0,0.5); color: #cccccc; }
-	#chatFeed>div:nth-child(odd) { background: rgba(255, 255, 255, 0.03); }
-	#chatFeed>div>b { color: #2ba6cb; }
-	#chatFeed>div>b.mod { color: #ee5f5b; }
-	#chatFeed>div>b.gold { color: gold; }
-	#chatFeed>div>i { font-size:10px; }
-	#chatFeed>div { padding-top: 3px; padding-bottom: 3px; }
- 	#chatter { margin-bottom: 0px; }
+	
 	#gamesList>div:hover { background: rgba(255, 255, 255, 0.1); }
 	#gamesList>div .button { margin: 0px; }
 	#gamesList>div { margin-bottom: 3px; }
@@ -48,6 +41,7 @@
 
 	.greenText { color: #43ac6a !important; }
 	.redText { color: #f04124 !important; }
+	.blueText { color: #008cba !important; }
 
 	.sidebar {
 		background: #FAFAFA;
@@ -66,20 +60,20 @@
 	}
 
 	.row {
-		max-width: 92rem;
+		max-width: 200rem;
 	}
 	</style>
 </head>
 <body>
 <!-- fixed navigation -->
- <div class="">
+ <div class="" style="">
   <nav class="top-bar" data-topbar id="menuTopBar" ng-controller="userBar">
     <ul class="title-area">
       <!-- Title Area -->
       <li class="name">
         <h1>
           <a href="#">
-            UnTap.in :: Beta - This is a mock up concept of a new lobby UI.
+            UnTap.in :: Beta
           </a>
         </h1>
       </li>
@@ -148,6 +142,7 @@
         <li class="divider"></li>
       </ul>
     </section>
+
   </nav>
   </div>
 

@@ -90,8 +90,9 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	}	
     });
 
-    untap.controller('lobbyCtrl', function($scope, $http, $rootScope, lobbyFeed) {
+    untap.controller('lobbyCtrl', function($scope, $http, $rootScope, lobbyFeed, deckData) {
     	$scope.g = lobbyFeed;
+    	$scope.decks = deckData;
     	$scope.template = 'templates/lobby.html';
 
     	$scope.sendChat = function(ev) {
@@ -108,6 +109,10 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     		}
     	}
 
+    	$scope.startGame = function() {
+    		console.log($scope.decks);
+    	}
+
     	$scope.quickPM = function(username) {
     		$scope.selectedUser = username;
     		$scope.pmUser();
@@ -119,12 +124,25 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 
 		$scope.arFriend = function() {
 			$http.post(apiURL,  {action: 'arFriend', username: $scope.selectedUser }, {responseType:'json', withCredentials: true }).
-        	success(function(r, status) { })
+        	success(function(r, status) {
+        		for(u in $scope.g.online) {
+					if($scope.g.online[u].username == $scope.selectedUser) {
+						$scope.g.online[u].friends = ($scope.g.online[u].friends == 'true' ? 'false' : 'true');
+					}
+				}
+        	});
 		}
 
 		$scope.arBlock = function() {
+
 			$http.post(apiURL,  {action: 'arBlock', username: $scope.selectedUser }, {responseType:'json', withCredentials: true }).
-        	success(function(r, status) { })
+        	success(function(r, status) {
+        		for(u in $scope.g.online) {
+					if($scope.g.online[u].username == $scope.selectedUser) {
+						$scope.g.online[u].blocks = ($scope.g.online[u].blocks == 'true' ? 'false' : 'true');
+					}
+				}
+        	})
 		}
 
 		$scope.pmUser = function() {
@@ -137,10 +155,12 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     		if($('#chatFeed').length > 0) {
     			//fix caht height window height with no scroll
     			$('#chatFeed').height($(window).height()-($('#menuTopBar')
-    				.outerHeight()+$('#menuButtons')
     				.outerHeight()+$('#menuLobbyBar')
     				.outerHeight()+$('#chatter')
-    				.outerHeight()+20));
+    				.outerHeight()+38));
+
+    			$('#gamesPanel').css({ 'max-height': $('#chatFeed').height()-15, 'overflow': 'scroll' });
+    
     			baselineChat();
     			setTimeout(function(){
     				$(document).foundation();
@@ -183,6 +203,13 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     	$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
+
+		$scope.anchor = function($event) {
+			var find = $($event.target).text();
+			$('html, body').animate({
+		        scrollTop: $('h3:contains("'+find+'")').offset().top
+		    }, 700);
+		}
     }
 
     var accountModalCtrl = function($scope, $modalInstance, $http, lobbyFeed) {
@@ -305,7 +332,10 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 		$scope.genModal = function(which) {
 			var modalInstance = $modal.open({
 				templateUrl: 'templates/'+which+'.html',
-				controller: genModalCtrl
+				controller: genModalCtrl,
+				opened: function () {
+	              alert('The couch was stolen!');
+	          	}
 			});
 		}
 
@@ -348,7 +378,16 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 			.success(function(r, status) {
 				$scope.decks.list = r;
 				$scope.deckCount = Object.keys(r).length;
+
+				var typeList = [];
+				for(d in $scope.decks.list) {
+					typeList.push($scope.decks.list[d].type);
+				}
+				$scope.decks.deckTypes = typeList.filter(function (e, i, arr) {
+				    return arr.lastIndexOf(e) === i;
+				});
 				$rootScope.$broadcast('doneDeckReload');
+				console.log($scope.decks.deckTypes);
 			})
 		}
 
@@ -369,15 +408,18 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
 	        	}
 
 	        	if(JSON.stringify(obj.userData) != JSON.stringify(r.userData)) { obj.userData = r.userData; }
-	        	if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) { obj.gameList = r.gameList; }
-	        	if(JSON.stringify(obj.specList) != JSON.stringify(r.specList)) { obj.specList = r.specList; }
-	        	
-	        	
+	        	//if(JSON.stringify(obj.gameList) != JSON.stringify(r.gameList)) { obj.gameList = r.gameList; }
+
+	        	obj.specList = syncArrObj(obj.specList, obj2arr(r.specList), 'gameId', 'sync');
+	        	obj.gameList = syncArrObj(obj.gameList, obj2arr(r.gameList), 'gameId', 'sync');
 	        	
 	        	if(typeof r.online != 'undefined') { // catch blanks from odd count
-		        	if(JSON.stringify(obj.friends) != JSON.stringify(r.friends)) { obj.friends = r.friends; }
-		        	if(JSON.stringify(obj.blocks) != JSON.stringify(r.blocks)) { obj.blocks = r.blocks; }
-		        	if(JSON.stringify(obj.online) != JSON.stringify(r.online)) { obj.online = r.online; }
+		        	//if(JSON.stringify(obj.friends) != JSON.stringify(r.friends)) { obj.friends = r.friends; }
+		        	obj.friends = syncArrObj(obj.friends, obj2arr(r.friends), 'username', 'sync');
+		        	//if(JSON.stringify(obj.blocks) != JSON.stringify(r.blocks)) { obj.blocks = r.blocks; }
+		        	obj.blocks = syncArrObj(obj.blocks, obj2arr(r.blocks), 'username', 'sync');
+		        	//if(JSON.stringify(obj.online) != JSON.stringify(r.online)) { obj.online = r.online; }
+		        	obj.online = syncArrObj(obj.online, obj2arr(r.online), 'username', 'sync');
 		        }
 		        if(typeof r.user != 'undefined') {
 		        	obj.user = r.user;
@@ -434,23 +476,45 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
     untap.factory('lobbyFeed', function() {
     	return {
             chat: {},
-            blocks: {},
-            friends: {},
-            online: {},
-            specList: {},
+            blocks: [],
+            friends: [],
+            online: [],
+            specList: [],
             userData: {
             	username: 'null' //set default as null for no login.
             },
-            gameList: {},
-            user: {}
+            gameList: [],
+            user: ''
         }
     });
 
     untap.factory('deckData', function() {
     	return {
-    		list: {}
+    		list: {},
+    		deckCount: 0,
+    		deckTypes: []
     	}
     });
+
+    function syncArrObj(client, server, key, type) {
+        var inObjectArray = function(key, value, arr) {
+            for (i in arr) if (arr[i][key] == value) return true;
+            return false;
+        }
+
+        if(type == 'sync') {
+            var c = client.length
+            while (c--) if(!inObjectArray(key, client[c][key], server)) client.splice(c, 1);
+        }
+        for(s in server) if(!inObjectArray(key, server[s][key], client)) client.push(server[s]);
+        return client;
+    }
+
+    function obj2arr(obj) {
+    	var arr = obj
+    	for(i in obj) arr.push(obj[i]);
+    	return arr;
+    }
 
     function makeid() {
 	    var text = "";
