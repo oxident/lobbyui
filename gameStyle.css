@@ -1,0 +1,1161 @@
+::-webkit-scrollbar {
+        width: 3px;
+    }
+    ::-webkit-scrollbar-button {
+        background: rgba(255, 255, 255, 0.1);
+        height: 0px;
+    }
+    ::-webkit-scrollbar-track-piece {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #252525;
+        border-radius: 2px;
+    }
+
+    input,textarea {
+        border-radius: 0;
+        padding: 0;
+    }
+
+    html,body {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        margin: 0;
+        height: 100%;
+        width:100%;
+        overflow: hidden;
+        font-family: Helvetica, Arial, sans-serif; 
+        font-weight: 400;
+        font-size: 12px;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        background-color: black;
+        background-image: url('http://www.untap.in/img/1.gif');
+        position: relative;
+    }
+
+    div[id^="rule"] {
+        position: absolute;
+        z-index: 100;
+        background-color: red;
+        top: -1px;
+        left: -1px;
+    }
+
+    div#ruleTop {
+        width: 100%;
+        height: 1px;
+    }
+
+    div#ruleLeft {
+        height: 100%;
+        width: 1px;
+    }
+
+
+
+    button {
+        padding: 3px 4px;
+        border: none;
+        outline: none;
+        background-color: silver;
+        color: black;
+        min-width: 60px;
+        box-shadow: 2px 2px rgba(0,0,0,0.5);
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: white;
+    }
+
+    button:disabled {
+        opacity: 0.5;
+    }
+
+    #toolTips {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background-color: black;
+        display: none;
+        color: white;
+        opacity: 0.7;
+        padding: 2px 5px;
+        z-index: 100;
+    }
+
+
+    #bFwrap {
+        position: absolute;
+        left: 0;
+        top: 109px;
+        width: 100%;
+        height: calc(100% - 218px);
+        height: -webkit-calc(100% - 218px);
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    #bfLine {
+        position: absolute;
+        left: 0;
+        bottom: calc(50% - 13px);
+        bottom: -webkit-calc(50% - 13px);
+        width: 100%;
+        height: 26px;
+        background: rgba(255, 0, 0, 0.1);
+    }
+
+    #battlefield {
+        position: relative;
+        background: rgba(0, 0, 0, 0.02);
+        width: 1258px;
+        height: 827px;
+        top: -webkit-calc(50% - 414px);
+        top: calc(50% - 414px);
+        left: 0;
+        transform:scale(1);
+        -webkit-transform:scale(1);
+        transform-origin: 0 50%;
+        -webkit-transform-origin: 0 50%;
+        
+    }
+
+    #battlefield.flasher {
+        animation: bfflash .5s linear .1s 3;
+        -webkit-animation: bfflash .5s linear .1s 3;
+    }
+
+    @keyframes bfflash
+    {
+        0% { background: rgba(0,0,0,0.02); }
+        50% { background-color: rgba(255,0,0,0.3); }
+        100% { background: rgba(0,0,0,0.02); }
+    }
+
+    @-webkit-keyframes bfflash /* Safari and Chrome */
+    {
+        0% { background: rgba(0,0,0,0.02); }
+        50% { background-color: rgba(255,0,0,0.3); }
+        100% { background: rgba(0,0,0,0.02); }
+    }
+
+    #battlefield .card {
+        position: absolute;
+        left: 49%;
+        top: 120%;
+        -webkit-transition:-webkit-transform 250ms linear;
+        -moz-transition:-moz-transform 250ms linear;
+        -ms-transition:-ms-transform 250ms linear;
+        -o-transition:-o-transform 250ms linear;
+        transition:transform 250ms linear;
+        z-index: 1;
+    }
+
+    #battlefield .op {
+        top: auto;
+        left: 49%;
+        bottom: 120%;
+    }
+
+    #bfButtons {
+        position: absolute;
+        bottom: 24px;
+        right: 0;
+        width: 24px;
+    }
+
+    #bfButtons div {
+        z-index: 11;
+        display: block;
+        height: 28px;
+        min-width: 28px;
+        line-height: 28px;
+        text-align: center;
+        background-color: #fff;
+        font-weight: bold;
+        font-size: 18px;
+        margin: 1px 1px;
+        opacity: 0.3;
+        cursor: pointer;
+    }
+
+    #bfButtons div:hover {
+        opacity: 0.7;
+    }
+
+    #swing {
+        position: absolute;
+        height: 40px;
+        width: 50px;
+        top: calc(50% - 20px);
+        top: -webkit-calc(50% - 20px);
+        right: 0;
+        border: 0;
+        outline: 0;
+        background: rgba(255, 255, 255, 0.5);
+        font-family: sans-serif;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+        font-size: 22px;
+    }
+
+    #swing:disabled {
+        color: black;
+    }
+
+    #gameLog {
+        position: absolute;
+        bottom: 24px;
+        right: -20%;
+        padding-top: 24px;
+        height: calc(100% - 48px);
+        height: -webkit-calc(100% - 48px);
+        width: 20%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    #gameLog a {
+        color: white;
+    }
+
+    #gameLog #gameChat.scroll, #gameLog #publicChat.scroll, #gameLog #spectateChat.scroll {
+        overflow-y: scroll;
+        height: 100%;
+        width: 100%;
+    }
+
+    #gameStatus {
+        width: 100%;
+        position: absolute;
+        top: 2px;
+        left: 0;
+    }
+
+    .turnTime {
+        width: 49%;
+        text-align: center;
+        color: white;
+        padding: 4px 0;
+    }
+
+    #gsTime { float: right; }
+    #gsTurn { float: left; }
+
+    #gameLog b { text-transform: capitalize; }
+    #gameLog b.player { color: #B6D4E7; }
+    #gameLog b.opponent { color: #EDCBC9; }
+
+    #gameLog i {
+        color: #C0DA90;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+
+    #gameLog .gLog {
+        color: white;
+        opacity: 0.6;
+        font-size: 10px;
+        padding: 1px;
+    }
+
+    #gameLog .gChat {
+        color: white;
+        font-size: 12px;
+        padding: 1px;
+    }
+
+    #gameLog .pubChat {
+        color: white;
+        font-size: 12px;
+        padding: 1px;
+    }
+
+    #chatter {
+        position: absolute;
+        bottom: 109px;
+        right: 72px;
+        height: 24px;
+        width: calc(20% - 72px);
+        width: -webkit-calc(20% - 72px);
+        background: rgba(255, 255, 255, 0.5);
+        border: none;
+        outline: none;
+        margin: 0;
+        padding: 0;
+    }
+    #chatter:focus {
+        border: none;
+        outline: none;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #chatter.public {
+        background: rgba(91, 192, 222, 0.5);
+    }
+
+    #chatter.spectate {
+        background: rgba(204, 126, 0, 0.5);
+    }
+
+    div[id^="showChat"] {
+        position: absolute;
+        bottom: 109px;
+        height: 16px;
+        width: 16px;
+        background: rgba(255, 255, 255, 0.5);
+        margin: 0;
+        font-size: 16px;
+        text-align: center;
+        padding: 4px;
+        cursor: pointer;
+    }
+
+    div[id^="showChat"]:hover {
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #showChatGame {
+        right: 48px;
+    }
+    #showChatPublic {
+        right: 24px;
+    }
+    #showChatSpectator {
+        right: 0px;
+    }
+
+    #showChatSpectator.flasher {
+        animation: specchatflash 1s linear .5s infinite;
+        -webkit-animation: specchatflash 1s linear .5s infinite;
+    }
+
+    @keyframes specchatflash
+    {
+        0% { background: rgba(255, 255, 255, 0.9); }
+        50% { background: rgba(204, 126, 0, 0.5); }
+        100% { background: rgba(255, 255, 255, 0.9); }
+    }
+
+    @-webkit-keyframes specchatflash /* Safari and Chrome */
+    {
+        0% { background: rgba(255, 255, 255, 0.9); }
+        50% { background: rgba(204, 126, 0, 0.5); }
+        100% { background: rgba(255, 255, 255, 0.9); }
+    }
+
+
+    #chatSwap {
+        position: absolute;
+        bottom: 133px;
+        right: 0;
+        height: 26px;
+    }
+
+    #chatSwap div {
+        display: inline-block;
+        height: 24px;
+        min-width: 24px;
+        line-height: 23px;
+        text-align: center;
+        background-color: #fff;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 2px 2px;
+        opacity: 0.3;
+        cursor: pointer;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    #chatSwap div:hover {
+        opacity: 0.7;
+    }
+
+    #chatSwap div.public:hover {
+        background: rgba(91, 192, 222, 0.5);
+    }
+
+    #chatSwap div.spectate:hover {
+        background: rgba(204, 126, 0, 0.5);
+    }
+
+    #playObjects {
+        position: relative;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .popBox {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        display: none;
+    }
+
+    .popBox>div {
+        width:600px;
+        max-height:500px;
+        position:absolute;
+        left:50%;
+        top:50%;
+        margin:-250px 0 0 -300px;
+        box-shadow: 4px 4px rgba(0,0,0,0.7);
+        background-color: white;
+        padding-bottom: 50px;
+    }
+
+    .popBox>div>span,
+    .popBox>div>select,
+    .popBox>div>textarea {
+        display: inline-block;
+        width: 60%;
+        text-align: left;
+        margin-left: 20%;
+        margin-top: 5px;
+    }
+
+    .popBox>div>h2 {
+        margin-left: 15%;
+    }
+
+    .popBox>div>span {
+        margin-top: 15px;
+    }
+
+    .popBox>b {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: block;
+        height: 24px;
+        min-width: 24px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 12px;
+        background-color: silver;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 1px 1px rgba(0,0,0,0.5);
+        margin-left: -312px;
+        margin-top: -262px;
+    }
+
+    .popBox button.full {
+        margin-left: 25%;
+        width: 50%;
+        margin-bottom: 15px;
+    }
+
+    #outCardLeft textarea,#outCardRight textarea {
+        width: 87%;
+        height: 40%;
+        margin: 15% 6%;
+        font-family: sans-serif;
+        text-align: center;
+        font-size: 40px;
+        border: 0;
+        outline: 0;
+        background: rgba(255, 255, 255, 0.5);
+        resize:none;
+        border-radius: 0;
+        display: none;
+    }
+
+    #outCardLeft,#outCardRight {
+        position: absolute;
+        background-color: #000;
+        border-radius: 10px;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        z-index: 11;
+        -webkit-transition: 500ms linear;
+        -moz-transition: 500ms linear;
+        -ms-transition: 500ms linear;
+        -o-transition: 500ms linear;
+        transition: 500ms linear;
+    }
+
+    @media screen and (max-height: 600px) {
+        #outCardLeft,#outCardRight {
+            top: -webkit-calc(50% - 133px);
+            top: calc(50% - 133px);
+            width: 188px;
+            height: 267px;
+        }
+
+        #outCardLeft {
+            left: -188px;
+            cursor: w-resize;
+        }
+
+        #outCardRight {
+            right: -188px;
+            cursor: e-resize;
+        }
+    }
+
+    @media screen and (min-height: 601px) {
+        #outCardLeft,#outCardRight {
+            top: -webkit-calc(50% - 222px);
+            top: calc(50% - 222px);
+            width: 312px;
+            height: 445px;
+        }
+
+        #outCardLeft {
+            left: -320px;
+            cursor: w-resize;
+        }
+
+        #outCardRight {
+            right: -320px;
+            cursor: e-resize;
+        }
+    }
+
+    #outCardLeft.in {
+        left: 0px;
+        cursor: w-resize;
+    }
+
+    #outCardRight.in {
+        right: 0px;
+        cursor: e-resize;
+    }
+
+    .counter {
+        display: block;
+        height: 30px;
+        min-width: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 15px;
+        background-color: #fff;
+        position: absolute;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .card {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        position: relative;
+        width: 74px;
+        height: 103px;
+        background-size: cover;
+        background-color: #000;
+        background-image: url('http://www.untap.in/backs/untap.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        display: inline-block;
+        border-radius: 4px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden; /* Chrome and Safari */
+        -moz-backface-visibility: hidden; /* Firefox */
+        -ms-backface-visibility: hidden; /* Internet Explorer */
+    }
+
+    .card.dragging input, .card.dragging textarea {
+        pointer-events:none;
+    }
+
+    .card.op {
+        background-image: url('http://www.untap.in/backs/untap.jpg');
+    }
+
+    #deck .counter, #deck2 .counter, #opdeck .counter, #opdeck2 .counter { pointer-events: none; }
+
+    .card .counter {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    #battlefield .card .counter {
+        bottom: -5px;
+        left: -5px;
+    }
+
+    .card input {
+        position: absolute;
+        margin: 0;
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+        font-family: sans-serif;
+        text-align: center;
+        border: 0;
+        outline: 0;
+    }
+    .card input.tName {
+        top: 4px;
+        left: 4px;
+        width: 66px;
+    }
+
+    .card input.tStat {
+        bottom: 4px;
+        right: 4px;
+        width: 30px;
+    }
+
+    .card textarea.notes {
+        position: absolute;
+        top: 12px;
+        left: 6px;
+        overflow:hidden;
+        width: 58px;
+        height: 40px;
+        font-family: sans-serif;
+        text-align: center;
+        font-size: 13px;
+        border: 0;
+        outline: 0;
+        background: rgba(255, 255, 255, 0.5);
+        resize:none;
+        margin: 0;
+        padding: 2px;
+    }
+
+    .card textarea:disabled {
+        color: black;
+    }
+    .card input:disabled {
+        color: black;
+    }
+
+    .card.activeMenu {
+        z-index: 10 !important;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden; /* Chrome and Safari */
+        -moz-backface-visibility: hidden; /* Firefox */
+        -ms-backface-visibility: hidden; /* Internet Explorer */
+    }
+
+    #opdeck,#opdeck2 {
+        position: absolute;
+        top: 3px;
+        background-image: url('http://www.untap.in/backs/untap.jpg');
+    }
+
+    #opdeck {
+        
+        right: calc(20% - 74px);
+        right: -webkit-calc(20% - 74px);
+        
+        <?php if($gData[game][gameType] == "L5R") { ?>
+        -webkit-box-shadow: inset 0 0 0px 5px #336633;
+        -moz-box-shadow: inset 0 0 0px 5px #336633;
+        box-shadow: inset 0 0 0px 5px #336633;
+        <?php } ?>
+    }
+
+    #opdeck2 {
+        right: calc(20% - 154px);
+        right: -webkit-calc(20% - 154px);
+        display: none;
+    }
+
+    #noDeck {
+        position: absolute;
+        bottom: 40px;
+        right: calc(20% - 74px);
+        right: -webkit-calc(20% - 74px);
+    }
+
+    #noDeck>button {
+        padding: 3px 10px;
+    }
+
+    #deck,#deck2 {
+        position: absolute;
+        bottom: 3px;
+        background-image: url('http://www.untap.in/backs/untap.jpg');
+    }
+
+    #deck {
+        right: calc(20% - 74px);
+        right: -webkit-calc(20% - 74px);
+        <?php if($gData[game][gameType] == "L5R") { ?>
+        -webkit-box-shadow: inset 0 0 0px 4px #336633;
+        -moz-box-shadow: inset 0 0 0px 4px #336633;
+        box-shadow: inset 0 0 0px 4px #336633;
+        <?php } ?>
+    }
+
+    #deck2 {
+        right: calc(20% - 154px);
+        right: -webkit-calc(20% - 154px);
+        display: none;
+    }
+
+    .deckMenu {
+        position: absolute;
+        width: 1px;
+        height: 93px;
+        right: 20%;
+        bottom: 3px;
+        box-shadow: 2px 2px rgba(0,0,0,0.5);
+        overflow: hidden;
+        background-color: white;
+        padding: 5px 10px;
+        z-index: 5;
+        display: none;
+    }
+
+    .deckMenu b {
+        display: block;
+    }
+
+    .deckMenu select {
+        width: 100%;
+    }
+
+    .opdeckMenu {
+        position: absolute;
+        width: 1px;
+        height: 93px;
+        right: 20%;
+        top: 3px;
+        box-shadow: 2px 2px rgba(0,0,0,0.5);
+        overflow: hidden;
+        background-color: white;
+        padding: 5px 10px;
+        z-index: 5;
+        display: none;
+    }
+
+    .opdeckMenu b { display: block; }
+
+    .opdeckMenu select { width: 100%; }
+
+    #discard { left: 90px; bottom: 3px; }
+
+    #opdiscard { left: 90px; top: 3px; }
+
+    #expelled { left: 174px;  bottom: 3px; }
+
+    #opexpelled { left: 174px; top: 3px; }
+
+    #facedownpile { left: 258px; bottom: 3px; }
+
+    #opfacedownpile { left: 258px; top: 3px; }
+
+    .spanPile {
+        position: absolute;
+        width: 74px;
+        line-height: 0;
+        height: 103px;
+    }
+
+    .spanPile .card {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+     .spanPile .expand {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 16px;
+        padding: 1px;
+        text-align: center;
+        color: white;
+        cursor: pointer;
+        z-index: 30;
+        font-size: 14px;
+        background-color: rgba(0,0,0,0.8);
+        line-height: 14px;
+    }
+
+    .spanPile .expandTouch {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        /*
+        width: 74px;
+        height: 103px;
+        */
+        width: 100%;
+        height: 100%;
+        z-index: 30;
+        display: inline-block;
+    }
+
+    .spanPile .wholePileAction {
+        position: absolute;
+        bottom: 36.5px;
+        left: 22px;
+        z-index: 35;
+
+        display: block;
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 20px;
+        background-color: #6B6B6B;
+        background-position: -150px 0px;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0.8;
+        color: black;
+        border: 1px solid #000;
+        background-image: url('http://www.untap.in/img/icons.png');
+        color: white;
+        text-shadow: 0px 0px 4px rgba(150, 150, 150, 1);
+    }
+
+    .spanPile .wholePileAction:hover {
+        border: 1px solid #06B7E9;
+        box-shadow: 0 0 1px 1px rgba(0,0,0,0.2);
+        opacity: 1;
+        height: 30px;
+        width: 30px;
+        color:red;
+        background-color: #06B7E9;
+        z-index: 55;
+    }
+
+    .spanPile .wholePileAction:hover:before {
+        content: attr(data-ttip);
+        display: inline-block;
+        position:absolute;
+        top: -22px;
+        left: -30px;
+        width: 90px;
+        text-align:center;
+        pointer-events: none;
+        color: black;
+        z-index: 55;
+        font-size: 12px;
+        text-shadow: 0 0 5px #fff, 0 0 5px #06B7E9, 0 0 5px #06B7E9, 0 0 40px #06B7E9, 0 0 5px #06B7E9, 0 0 5px #06B7E9, 0 0 5px #06B7E9;
+    }
+
+    .avatar {
+        position: absolute;
+        right: 20px;
+        background-image: url('http://www.untap.in/img/avatars/default.jpg');
+        background-size: 90px 90px;
+        height: 90px; 
+        width: 90px;
+        border-radius: 45px;
+        box-shadow: 2px 2px rgba(0,0,0,0.5);
+        background-color: white;
+    }
+
+    #avatar {
+        bottom: 15px;
+        background-image: url('http://www.untap.in/img/avatars/default.jpg');
+    }
+
+    #avatar .life {
+        top: 0;
+        left: 0;
+        cursor: pointer;
+    }
+
+    #avatar .genCount {
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        background-color: black;
+        color: white;
+    }
+
+    #opavatar {
+        top: 15px;
+        background-image: url('http://www.untap.in/img/avatars/default.jpg');
+    }
+
+    #opavatar .life {
+        bottom: 0;
+        left: 0;
+        cursor: pointer;
+    }
+
+    #opavatar .genCount {
+        bottom: 0;
+        right: 0;
+        cursor: pointer;
+        background-color: black;
+        color: white;
+        
+    }
+
+    .hand {
+        position: absolute;
+        left: 340px;
+        width: calc(80% - 340px);
+        width: -webkit-calc(80% - 340px);
+        text-align: center;
+        overflow: hidden;
+        height: 104px;
+        white-space: nowrap;
+        padding: 1px;
+        overflow: hidden;
+    }
+
+    #hand { bottom:0; }
+    #ophand { top:0; }
+
+    .username {
+        position: absolute;
+        right: 15px;
+        background-color: white;
+        box-shadow: 2px 2px rgba(0,0,0,0.5);
+    }
+
+    #opusername {
+        top: 0;
+        padding: 5px 5px;
+        width: 90px;
+        font-weight: bold;
+        text-align: center;
+    }
+    #username {
+        right: 15px;
+        top: 100%;
+        width: 100px;
+        margin-top: -24px;
+        cursor: pointer;
+    }
+
+    #username span {
+        display: block;
+        padding: 5px 5px;
+        width: 90px;
+    }
+
+    #username span:first-child {
+        font-weight: bold;
+        text-align: center;
+    }
+    #username span:not(:first-child):hover {
+        background-color: silver;
+    }
+
+    #phase {
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 80px;
+    }
+
+    #phase div {
+        background-color: black;
+        color: #c8c8c8;
+        padding: 3px 0;
+        text-align: center;
+        opacity: 0.5;
+        cursor: pointer;
+    }
+
+    #phase div:hover {
+        color: #C0DA90;
+        opacity: 1;
+    }
+
+    #phase div.active {
+        background-color: silver;
+        color: #C0DA90;
+        opacity: 1;
+        color: black;
+    }
+
+    #phase div:first-child {
+        border-top-right-radius: 5px;
+    }
+
+    #phase div:last-child {
+        border-bottom-right-radius: 5px;
+    }
+
+    #new-link-line {
+        z-index: 11;
+        position: absolute;
+        width: 4px;
+        background-color: #06a;
+        z-index: 901;
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
+    }
+    #triangle-down {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 20px solid #06a;
+        bottom:-5px;
+        left: -8px;
+    }
+
+     #pileBox {
+        position:    absolute;
+        background-color: black;
+        opacity: 0.2;
+        border: 1px dotted #000;
+        z-index: 900;
+      }
+
+      #playsFirst {
+        text-align: center;
+        width: 80%;
+        position: absolute;
+        top: -webkit-calc(50% - 30px);
+        top: calc(50% - 30px);
+        left: 0;
+        z-index: 12;
+        font-size: 45px;
+        font-weight: bold;
+        color: #1E90FF;
+        text-shadow:1px 1px black;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+    .ballMenuItem {
+        display: block;
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 20px;
+        background-color: #6B6B6B;
+        position: absolute;
+        font-weight: bold;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0.8;
+        color: black;
+        border: 1px solid #000;
+        z-index: 50;
+        background-image: url('http://www.untap.in/img/icons.png');
+        color: white;
+        text-shadow: 0px 0px 4px rgba(150, 150, 150, 1);
+    }
+
+    .ballMenuItem:hover {
+        border: 1px solid #06B7E9;
+        box-shadow: 0 0 1px 1px rgba(0,0,0,0.2);
+        opacity: 1;
+        height: 30px;
+        width: 30px;
+        color:red;
+        background-color: #06B7E9;
+        z-index: 55;
+    }
+
+    .ballMenuItem:hover:before {
+        content: attr(data-ttip);
+        display: inline-block;
+        position:absolute;
+        top: -22px;
+        left: -30px;
+        width: 90px;
+        text-align:center;
+        pointer-events: none;
+        color: black;
+        z-index: 55;
+        font-size: 12px;
+        text-shadow: 0 0 5px #fff, 0 0 5px #06B7E9, 0 0 5px #06B7E9, 0 0 40px #06B7E9, 0 0 5px #06B7E9, 0 0 5px #06B7E9, 0 0 5px #06B7E9;
+    }
+
+    .pivoted {
+        -ms-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform:rotate(90deg);
+    }
+
+    .rotated {
+        -ms-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        transform:rotate(180deg);
+    }
+
+    .pivoted.rotated {
+        -ms-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -webkit-transform: rotate(270deg);
+        transform:rotate(270deg);
+    }
+
+    #sideboardList {
+        height: 410px;
+        width: 40%;
+        border: 1px solid black;
+        float: left;
+        overflow: scroll;
+    }
+
+    #currentList {
+        height: 450px;
+        width: 40%;
+        border: 1px solid black;
+        float: right;
+        overflow: scroll;
+    }
+
+    #sideboardList label, #currentList label {
+        display: block;
+    }
+
+    #landscapePlease {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: black;
+        background-image: url('http://www.untap.in/img/1.gif');
+        font-size: 20px;
+        color: black;
+        text-align: center;
+        padding-top: 48%;
+        display: none;
+        z-index: 1000;
+        font-weight: bold;
+    }
+
+    @media screen and (max-height: 700px) { /* fixes for tiny screens */
+        #bFwrap {
+            top: 64px;
+            height: calc(100% - 128px);
+            height: -webkit-calc(100% - 128px);
+        }
+        #chatter { bottom: 64px; }
+        #ophand,#opdiscard,#opexpelled,#opfacedownpile { top: -40px; }
+        #hand,#discard,#expelled,#facedownpile { bottom: -40px; }
+
+        div[id^="showChat"] { bottom: 64px; }
+        .avatar { right: 10px; }
+        #username,#opusername { right: 5px; }
+        #avatar { bottom: -30px; }
+        #opavatar { top: -30px; }
+
+        #deck, #opdeck { right: calc(20% - 45px); right: -webkit-calc(20% - 45px); }
+        #deck2, #opdeck2 { right: calc(20% - 100px); right: -webkit-calc(20% - 100px); }
+
+        #deck, #deck2 { bottom: 0px; width: 45px !important; height: 63px !important; }
+        #opdeck, #opdeck2 { bottom: 0px; width: 45px !important; height: 63px !important; }
+        .spanPile .expand { bottom: 40px }
+    }

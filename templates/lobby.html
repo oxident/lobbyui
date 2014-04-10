@@ -53,7 +53,7 @@
 				<div class="row" id="chatFeed">
 					<div class="small-12 columns" ng-repeat="chat in g.chat">
 						<b class="upperCase"
-						ng-class="{redText: chat.usertype=='mod', blueText: chat.usertype=='norm', greenText: chat.usertype=='friend'}"
+						ng-class="{redText: chat.usertype=='mod', blueText: chat.usertype=='norm', greenText: chat.usertype=='friend', goldText: chat.usertype=='gold'}"
 						ng-click="quickPM(chat.username)">{{chat.username}}</b> : 
 						<span ng-bind-html="chat.message | to_trusted"></span> 
 						<i class="show-for-medium-up">{{chat.gtime | agotime}} </i>
@@ -145,7 +145,7 @@
 		            <div class="small-2 columns">
 		                <a href="#" class="button right secondary disabled tiny expand">{{game.gameType}}</a>
 		            </div>
-		            <a href="#" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
+		            <a href="game.html#{{game.host}}" class="button right tiny hideJoin"><i class="fi-eye"></i> Spectate</a>
 		        </div>
 	        </div>
 		</div>

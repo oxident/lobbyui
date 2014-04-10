@@ -1,10 +1,386 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Untitled Document</title>
-    </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <title>UnTap.in :: Beta</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Patrik Hartwig" />
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js"></script>
+    <script src="gameAssets.js"></script>
+    <link rel="stylesheet" type="text/css" href="gameStyle.css">
+
+<style type="text/css">
+    .specHide { display: none; }
+    .counter { pointer-events: none; }
+</style>
+<?php } ?>
+
+<script type="text/javascript">
+
+    //global vars
+    window.returnUrl = 'index.html'
     
-    <body>
-    </body>
+    //dom assets
+
+    $(function() {
+    	$.post( "http://www.untap.in/apiv2.php",
+    		{ action: 'entergame', server: location.hash.replace('#', '') },
+    		function(data) {
+				console.log(data);
+				window.sData = data;
+
+				window.isMobile = sData.isMobile;
+				window.spectate = sData.spectate;
+				window.me = sData.me.username;
+				window.meDeckBack = 'http://www.untap.in/backs/'+sData.me.userRow.deckBack;
+    			window.op = sData.opponents[1].username;
+    			window.opDeckBack = 'http://www.untap.in/backs/'+sData.opponents[1].userRow.deckBack;
+
+    			var cbStyles = $('<style> '+
+    				".card, #deck, #deck2 { background-image: url('"+meDeckBack+"'); } " + 
+    				".card.op, #opdeck, #opdeck2 { background-image: url('"+opDeckBack+"'); }" + 
+    				' </style>');
+    			
+    			$('html > head').append(cbStyles);
+
+    			if(sData.isempty) {
+    				alert('Failed to initilise game data');
+					window.location.href = returnUrl;
+	            	window.location.assign(returnUrl);
+    			}
+    			gameInit();
+				startSockets();
+
+			}, 'json').fail(function() {
+				alert('Failed to initilise game data');
+				window.location.href = returnUrl;
+            	window.location.assign(returnUrl);
+			});
+    });
+
+    
+    var parent = {
+        showFrame: function(num, url) {
+        	
+            window.location.href = returnUrl;
+            window.location.assign(returnUrl);
+        },
+        tabAlert: function(sound) {
+
+        }
+    };
+
+
+</script>
+</head>
+<body>
+<div id="ruleTop"></div>
+<div id="ruleLeft"></div>
+
+<div id="playObjects" style="display: none;">
+
+    
+    <div id="playsFirst">
+        <?=ucfirst($gData[game][fTurn])?> Plays First!
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            setTimeout(function(){
+                $('#playsFirst').fadeOut();
+            }, 10000);
+        });
+    </script>
+    <?php } ?>
+    <div id="bFwrap">
+        <div id="bfLine"></div>
+        <div id="battlefield">
+            <input type="text" id="swing" maxlength="3">
+            <div id="pileBox" data-umenu="spile"></div>
+        </div>
+        <div id="bfButtons" class="specHide">
+            <div id="dice" data-livelements="dice" data-ttip="Dice; Left click roll d20, Right click roll d6">?</div>
+            <div data-ttip="Unpivot All" onclick="actions.unPivot($('#battlefield .card.pivoted:not(.op)')); return false;">U</div>
+            <div data-ttip="Add Token Card to Play Area" onclick="actions.token()">T</div>
+            <div data-ttip="Send Response Alert" id="resAlert" onclick="ui.resAlert()">!</div>
+        </div>
+        <div id="gameLog">
+            <div id="gameStatus">
+                <span id="gsTurn" class="turnTime" data-livelements="turn">Turn 0</span>
+                <span id="gsTime" class="turnTime" data-livelements="timer">00:00</span>
+            </div>
+            <div id="gameChat" class="scroll"></div>
+            <div id="publicChat" class="scroll"></div>
+            <div id="spectateChat" class="scroll"></div>
+        </div>
+    </div>
+
+    <input id="chatter" type="text">
+    <div id="showChatGame">G</div>
+    <div id="showChatPublic">P</div>
+    <div id="showChatSpectator">S</div>
+
+    <div id="opfindCard" class="opdeckMenu">
+        <b>Find Card</b>
+        <select class="opfindCardList"><option>Select Card</option></select>
+        <button style="float: left;" onclick="ui.oppopDeckMenu('close')">Close</button><button style="float: right;" id="opfindCardGo">Select</button>
+    </div>
+
+    <div id="findCard" class="deckMenu">
+        <b>Find Card</b>
+        <select class="findCardList"><option>Select Card</option></select>
+        <select class="findCardAction">
+            <option value="none">Action</option>
+            <option value="play">Play</option>
+            <option value="playFaceDown">Play Face Down</option>
+            <option value="ReturnToHand">Hand</option>
+            <option value="discard">Discard</option>
+            <option value="expel">Expel</option>
+            <option value="ReturnToDeck">Top Deck</option>
+            <option value="ReturnToBottom">Bottom Deck</option>
+        </select>
+        <button style="float: left;" onclick="ui.popDeckMenu('close')">Close</button><button style="float: right;" id="findCardGo">Go</button>
+    </div>
+
+    <div id="lookCard" class="deckMenu">
+        <b>Look at Cards</b>
+        <select class="lookCardList"><option>Select Card</option></select>
+        <select class="lookCardAction">
+            <option value="none">Action</option>
+            <option value="play">Play</option>
+            <option value="playFaceDown">Play Face Down</option>
+            <option value="ReturnToHand">Hand</option>
+            <option value="discard">Discard</option>
+            <option value="expel">Expel</option>
+            <option value="ReturnToDeck">Top Deck</option>
+            <option value="ReturnToBottom">Bottom Deck</option>
+        </select>
+        <button style="float: left;" onclick="ui.popDeckMenu('close')">Close</button><button style="float: right;" id="lookCardGo">Go</button>
+    </div>
+
+    <div id="noDeck" class="specHide"><button onclick="ui.popBox('changeDeck')">Select Deck</button></div>
+
+    <div id="deck" class="card deck" data-umenu="deck" data-ttip="Main Draw Deck: Click for actions, Press a number 1-99 for multiple actions."><span class="counter deckCount" data-livelements="deck">?</span></div>
+    <div id="deck2" class="card deck" data-umenu="deck2" data-ttip="Second Deck: Click for actions, Press a number 1-99 for multiple actions."><span class="counter deckCount" data-livelements="deck2">?</span></div>
+    
+    <div id="opdeck" class="card" data-umenu="opdeck" ><span class="counter deckCount" data-livelements="op1deck">?</span></div>
+    <div id="opdeck2" class="card" data-umenu="opdeck2" ><span class="counter deckCount" data-livelements="op1deck2">?</span></div>
+
+    <div id="avatar" class="avatar">
+        <div class="counter life" data-livelements="life" data-ttip="Life Count. Left click to increase, Right Click to Decrease (Hotkeys Up/Down Arrow)">?</div>
+        <div class="counter genCount" data-livelements="genCount" data-ttip="General Counter. Left click to increase, Right Click to Decrease">?</div>
+    </div>
+    <div id="opavatar" class="avatar">
+        <div class="counter life" data-livelements="op1life">?</div>
+        <div class="counter genCount" data-livelements="op1genCount">?</div>
+    </div>
+
+    <div id="opusername" class="username" data-livelements="op1username"></div>
+    <div id="username" class="username" onclick="ui.popBox('gameMenu')">
+        <span data-livelements="username"></span>
+    </div>
+
+    <div id="hand" class="hand"></div>
+    <div id="ophand" class="hand"></div>
+
+    <div id="discard" class="spanPile"></div>
+    <div id="opdiscard" class="spanPile"></div>
+
+    <div id="expelled" class="spanPile"></div>
+    <div id="opexpelled" class="spanPile"></div>
+
+    <div id="facedownpile" class="spanPile"></div>
+    <div id="opfacedownpile" class="spanPile"></div>
+
+    <div id="outCardLeft"><textarea></textarea></div>
+    <div id="outCardRight"><textarea></textarea></div>
+
+    <div id="phase">
+        <div data-phase="bp">EOT/Start</div>
+        <div data-phase="fmp">First</div>
+        <div data-phase="cp">Attack</div>
+        <div data-phase="smp">Second</div>
+        <div data-phase="et">End Turn</div>
+    </div>
+
+    <div id="toolTips"></div>
+</div>
+
+<div id="tildPop" class="popBox">
+    <div>
+        <div style="padding: 50px;">
+            Client Version: <span id="clientVersion">0.91.1 <?php if(isMobile()) { echo '(tablet)' ;}?></span><br>
+            Server ID: <span><?=$gData[host]?></span><br>
+            Socket Status: <span id="SocketStatus">Connecting...</span><br>
+            Socket Sync: <span id="SocketSync"></span><br>
+            LoopTime: <span id="gsStatus_loopTime"></span><br>
+            MemUsage: <span id="gsStatus_memoryUsage"></span><br>
+            Loop Num: <span id="gsStatus_loopNum"></span><br>
+            Client T: <span id="gsStatus_cTime"></span><br>
+            MemCd: <span id="gsStatus_memcache"></span><br>
+            Last Send: <span id="gsStatus_lSend"></span><br>
+            <video id="localVideo"></video>
+            <div id="remotes"></div>
+        </div>
+    </div>
+    <b>&times;</b>
+</div>
+
+<div id="sideboardPop" class="popBox">
+    <div>
+        <h2>Sideboard</h2>
+        <div style="width: 90%; margin-left: 5%;">
+            <div id="sideboardList"></div>
+            <div id="currentList"></div>
+            
+            <!-- <select id="currentList" style="height: 450px; width: 40%; float: right;" multiple> </select>-->
+
+            
+            <span style="text-align: center; display:inline-block; width:100%;">
+                <button id="sideboardButton"><- Swap -></button>
+            </span>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <b>&times;</b>
+</div>
+<div id="changeDeck" class="popBox">
+    <div>
+        <h2>Change Deck</h2>
+        <span>Change to</span>
+        <select name="chDeck">
+        <?php
+            $decks = pdb_query("decks", "*", "WHERE username = '".USERNAME."' AND type = '".$gData[game][gameType]."' ORDER BY name ASC");
+            foreach($decks as $value) {
+                if($gData[me][deck] == $value[pdb_rowid]) {
+                    echo '<option value="'.$value[pdb_rowid].'" selected>'.$value[name].'</option>';
+                }else{
+                    echo '<option value="'.$value[pdb_rowid].'">'.$value[name].'</option>';
+                }
+            }
+        ?>
+        </select>
+        <span style="text-align: right;">
+            <button id="changeDeckButton">Change Now</button>
+        </span>
+    </div>
+    <b>&times;</b>
+</div>
+
+<div id="gameMenu" class="popBox">
+<div>
+        <h2>Game Menu</h2>
+    <button class="full specHide" id="startVchat" onclick="startVchat(); ui.popBox('close'); return false;">Start Voice Chat</button>
+    <button class="full specHide" id="endVchat" style="display:none;" onclick="killVoice(); ui.popBox('close'); return false;">End Voice Chat</button>
+    <button class="full specHide" onclick="actions.scoop(); ui.popBox('close'); return false;">Scoop Cards</button>
+    <button class="full specHide" onclick="ui.popBox('changeDeck')">Change Deck</button>
+    <button class="full specHide" onclick="ui.popBox('sideboardPop')">Sideboard</button>
+    <button class="full specHide" onclick="ui.popBox('settings')">Game Settings</button>
+    <button class="full" onclick="ws.close(); parent.showFrame(2, 'two.html');">Back To Lobby</button>
+    <button class="full specHide" onclick="ui.popBox('leaveGame')">Leave Game</button>
+</div>
+<b>&times;</b>
+</div>
+
+<div id="settings" class="popBox">
+    <div>
+        <h2>Game Settings</h2>
+        <span>Alert Sounds</span>
+        <select class="gSettings" name="soundAlerts">
+            <option value="true">On</option>
+            <option value="false">Off</option>
+        </select>
+        <span>Mulligan Type (Play cards face down to keep)</span>
+        <select class="gSettings" name="mulligan">
+            <option value="sta">Return hand, Shuffle, Draw 1 Less</option>
+            <option value="spo">Hand to Bottom of deck, Draw 1 Less</option>
+            <option value="edh">Expel Hand, Draw 1 Less</option>
+        </select>
+        <span>Mulligan Hotkey (M)</span>
+        <select class="gSettings" name="mulhotkey">
+            <option value="true">Enabled</option>
+            <option value="false">Disabled</option>
+        </select>
+        <span>Shuffle Type</span>
+        <select class="gSettings" name="shuffle">
+            <option value="fya">Fisher–Yates Shuffle</option>
+            <option value="gsm">Gilbert–Shannon–Reeds Model</option>
+            <option value="cro">Computated Random Order</option>
+            <option value="fvy">Five Pile + Fisher-Yates Shuffle</option>
+        </select>
+        <span>Menu Animations</span>
+        <select class="gSettings" name="animate">
+            <option value="false">Off</option>
+            <option value="true">On</option>
+        </select>
+    </div>
+    <b>&times;</b>
+</div>
+
+<div id="leaveGame" class="popBox">
+    <div>
+        <h2>Leave Game</h2>
+        <span>Who Won?</span>
+        <select name="lGwinner">
+            <option value="">We're Both Winners!!</option>
+            <!-- <option data-livelements="op1username"></option> -->
+            <!-- <option data-livelements="username" selected></option> -->
+        </select>
+        <span style="text-align: right;">
+            <button id="leaveGameButton">Leave Game</button>
+        </span>
+    </div>
+    <b>&times;</b>
+</div>
+<div id="landscapePlease">
+    Landscape orientation required.
+</div>
+<div id="spaceBox"></div>
+<style>
+    #remotes video {
+        height: 20px;
+        display: inline-block;
+    }
+    #localVideo {
+        height: 20px;
+        display: inline-block;
+    }
+</style>
+<script src="/src/vchat.js"></script>
+<script type="text/javascript">
+    // grab the room from the URL
+    function killVoice() {
+        $('#localVideo').replaceWith( '<video id="localVideo"></video>' );
+        $('#remotes').empty();
+        doPost( { action: 'chat', message: 'I have ended voice chat.', chatId: ui.makeid() });
+        $('#startVchat').show();
+        $('#endVchat').hide();
+    }
+    function startVchat() {
+        if(spectate == true) return false;
+        doPost( { action: 'chat', message: 'I have started voice chat.', chatId: ui.makeid() });
+        var room = '<?=$gData[host].$gData[game][gameId]?>';
+        $('#startVchat').hide();
+        $('#endVchat').show();
+        // create our webrtc connection
+        var webrtc = new SimpleWebRTC({
+            localVideoEl: 'localVideo', 
+            remoteVideosEl: 'remotes', 
+            autoRequestMedia: true, 
+            log: true
+        });
+        
+        webrtc.on('readyToCall', function () {
+            // you can name it anything
+            if (room) webrtc.joinRoom(room);
+        });
+    }
+    
+</script>
+</body>
 </html>

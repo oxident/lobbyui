@@ -1,5 +1,5 @@
 
-$(function(){
+gameInit = function() {
 	
 	//dom cache
 
@@ -60,7 +60,6 @@ $(function(){
 
 	// init functions
 	init.clientTime();
-	init.bfScaling();
 	init.preventions();
 	init.deckHovers();
 	init.hotkeys();
@@ -211,7 +210,7 @@ $(function(){
 			}
 
 			// catch one up binding.
-			$(document).one('touchend mouseup', function(e){
+				$(document).one('touchend mouseup', function(e) {
 					$(document).off('touchmove', ui.dragNums).off('touchmove', ui.genDrag).off('touchmove', ui.dragCounter);
 					
 					if(((isTouch)&&(e.type == 'touchend'))||((!isTouch)&&(e.type != 'touchend'))) {
@@ -377,7 +376,16 @@ $(function(){
 		}
     });
 
-});
+	$(document).on({
+	    mouseenter: function () {
+	         $('#toolTips').text('Tip: '+$(this).data('ttip')).show();
+	    },
+	    mouseleave: function () {
+	        $('#toolTips').text('').hide();
+	    }
+	}, "[data-ttip]");
+
+}
 
 
 var dTools = {
@@ -1587,16 +1595,16 @@ function cardSync(data) {
 	var currentLocation = cardCache.parent().attr('id');
 
 	if($('#deck').data('tempcid') == cardid) {
-	    $('#deck').css("background-image", "url('/backs/<?=$gData[me][userRow][deckBack]?>')").data('tempcid', '');
+	    $('#deck').css("background-image", "url('"+meDeckBack+"')").data('tempcid', '');
 	}
 	if($('#opdeck').data('tempcid') == cardid) {
-	    $('#opdeck').css("background-image", "url('/backs/<?=$gData[opponents][1][userRow][deckBack]?>')").data('tempcid', '');
+	    $('#opdeck').css("background-image", "url('"+opDeckBack+"')").data('tempcid', '');
 	}
 	if($('#deck2').data('tempcid') == cardid) {
-	    $('#deck2').css("background-image", "url('/backs/<?=$gData[me][userRow][deckBack]?>')").data('tempcid', '');
+	    $('#deck2').css("background-image", "url('"+meDeckBack+"')").data('tempcid', '');
 	}
 	if($('#opdeck2').data('tempcid') == cardid) {
-	    $('#opdeck2').css("background-image", "url('/backs/<?=$gData[opponents][1][userRow][deckBack]?>')").data('tempcid', '');
+	    $('#opdeck2').css("background-image", "url('"+opDeckBack+"')").data('tempcid', '');
 	}
 
 	if(String(currentLocation).search(data.location) < 0) {
@@ -1890,10 +1898,13 @@ var bindHotKeys = function(e) {
     if(e.which == 57){ ui.setNum(parseInt(actPress+9)); actPress = '9'; }
 }
 
-$(function() {
+startSockets = function() {
 	window.ws = new WebSocket('ws://www.untap.in:443/');
     
     ws.onopen = function() {
+    	$('#playObjects').fadeIn(1000, function(){
+    			init.bfScaling();
+    	});
         $('#SocketStatus').text('Connected');
         var device = ''
         if(isMobile) device = 'tablet';
@@ -1918,7 +1929,7 @@ $(function() {
     $.each(jData, function(key, value){
         if ((value !== null) && value.hasOwnProperty('type')) {
 
-            //console.log(value);
+            console.log(value);
             switch(value.type) {
 
                 case 'elements':
@@ -2156,18 +2167,21 @@ $(function() {
             }
     });
   };
-});
+}
 
-$('[data-ttip]').livequery(function() {
-    if(spectate == false) {
-        $(this).hover(function(){
-            $('#toolTips').text('Tip: '+$(this).data('ttip')).show();
-        }, function(){
-            $('#toolTips').text('').hide();
-        });
-    }
+// $('[data-ttip]').livequery(function() {
+//     if(spectate == false) {
+//         $(this).hover(function(){
+//             $('#toolTips').text('Tip: '+$(this).data('ttip')).show();
+//         }, function(){
+//             $('#toolTips').text('').hide();
+//         });
+//     }
     
-});
+// }); //replaced with .on equiv below.
+
+
+
 
 function doPost(data, func) {
     data.sendid = ui.makeid();

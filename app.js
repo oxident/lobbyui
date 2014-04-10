@@ -448,6 +448,7 @@ window.apiURL = 'http://www.untap.in/apiv2.php';
         	if(loopCount == 0) {
         		var loopTime = 1;
         		$scope.getDecks();
+        		
         	}else{
         		var loopTime = 3000;
         	}
